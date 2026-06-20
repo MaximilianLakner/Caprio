@@ -230,3 +230,25 @@ export function getBox(id: string): Dachbox | undefined {
 
 export const ALL_CITIES = Array.from(new Set(DACHBOXEN.map((b) => b.city))).sort();
 export const ALL_BRANDS = Array.from(new Set(DACHBOXEN.map((b) => b.brand))).sort();
+
+/** Representative postal code per city, so users can search by PLZ too. */
+export const CITY_PLZ: Record<string, string> = {
+  München: "80331",
+  Leipzig: "04109",
+  Stuttgart: "70173",
+  Hamburg: "20095",
+  Köln: "50667",
+  Berlin: "10115",
+  Freiburg: "79098",
+  Nürnberg: "90402",
+  Dresden: "01067",
+};
+
+/** Matches a box against a city name or postal code query. */
+export function matchesLocation(box: Dachbox, query: string): boolean {
+  const q = query.trim().toLowerCase();
+  if (!q) return true;
+  if (box.city.toLowerCase().includes(q)) return true;
+  const plz = CITY_PLZ[box.city];
+  return plz ? plz.startsWith(q) : false;
+}

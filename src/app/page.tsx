@@ -6,6 +6,8 @@ import {
   CalendarDays,
   Wallet,
   Sparkles,
+  Search,
+  MapPin,
 } from "lucide-react";
 import { BoxCard } from "@/components/box-card";
 import { HeroIllustration } from "@/components/hero-illustration";
@@ -19,16 +21,16 @@ export default function HomePage() {
   return (
     <>
       {/* ---------------------------------------------------------------- Hero */}
-      <section className="relative overflow-hidden">
+      <section className="relative flex h-[calc(100svh-4rem)] flex-col items-center justify-center overflow-hidden px-5 text-center sm:px-8">
         <div className="grain pointer-events-none absolute inset-0" />
 
-        <div className="relative mx-auto max-w-4xl px-5 pt-16 text-center sm:px-8 lg:pt-24">
+        <div className="relative flex w-full max-w-4xl flex-col items-center">
           <span className="animate-rise inline-flex items-center gap-2 rounded-full border border-line bg-paper/70 px-3 py-1 text-xs font-medium text-taupe-700">
             <Sparkles size={13} className="text-clay-500" />
             Dachboxen mieten &amp; vermieten — von Mensch zu Mensch
           </span>
 
-          <h1 className="animate-rise mx-auto mt-7 max-w-3xl font-display text-5xl font-semibold leading-[1.04] tracking-tight sm:text-6xl lg:text-7xl">
+          <h1 className="animate-rise mt-6 max-w-3xl font-display text-[2.6rem] font-semibold leading-[1.04] tracking-tight sm:text-6xl lg:text-7xl">
             Mehr Stauraum für dein{" "}
             <span className="relative whitespace-nowrap italic text-clay-600">
               Abenteuer
@@ -49,23 +51,43 @@ export default function HomePage() {
             </span>
           </h1>
 
-          <p className="animate-rise mx-auto mt-7 max-w-xl text-lg leading-relaxed text-ink-soft">
-            Leih dir eine Dachbox aus deiner Nähe – tageweise, fair und
-            unkompliziert. Oder verdiene mit deiner eigenen Box, wenn sie gerade nur
-            die Garage füllt.
+          <p className="animate-rise mx-auto mt-5 max-w-xl text-base leading-relaxed text-ink-soft sm:text-lg">
+            Leih dir eine Dachbox aus deiner Nähe – tageweise, fair und unkompliziert.
           </p>
 
-          <div className="animate-rise mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          {/* city / postal-code search */}
+          <form
+            action="/dachboxen"
+            className="animate-rise mt-7 flex w-full max-w-lg items-center gap-2 rounded-full border border-line bg-cream p-1.5 pl-5 shadow-[0_18px_50px_-30px_rgba(17,53,29,0.55)] transition-colors focus-within:border-clay-500"
+          >
+            <MapPin size={18} className="shrink-0 text-clay-600" />
+            <input
+              type="text"
+              name="ort"
+              placeholder="Stadt oder PLZ eingeben …"
+              aria-label="Stadt oder Postleitzahl"
+              className="w-full bg-transparent py-2.5 text-sm outline-none placeholder:text-taupe-500"
+            />
+            <button
+              type="submit"
+              className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-ink px-5 py-3 text-sm font-semibold text-cream transition-transform hover:-translate-y-px"
+            >
+              <Search size={16} />
+              <span className="hidden sm:inline">Suchen</span>
+            </button>
+          </form>
+
+          <div className="animate-rise mt-5 flex items-center gap-4 text-sm">
             <Link
               href="/dachboxen"
-              className="inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3.5 text-sm font-semibold text-cream transition-transform hover:-translate-y-px"
+              className="font-medium text-ink transition-colors hover:text-clay-600"
             >
-              Dachbox finden
-              <ArrowRight size={16} />
+              Alle Boxen ansehen
             </Link>
+            <span className="text-taupe-300">·</span>
             <Link
               href="/vermieten"
-              className="inline-flex items-center gap-2 rounded-full border border-line bg-cream px-6 py-3.5 text-sm font-semibold text-ink transition-colors hover:border-taupe-300"
+              className="font-medium text-ink transition-colors hover:text-clay-600"
             >
               Box vermieten
             </Link>
@@ -73,9 +95,7 @@ export default function HomePage() {
         </div>
 
         {/* hero illustration */}
-        <div className="relative mx-auto mt-8 max-w-3xl px-5 sm:mt-12 sm:px-8">
-          <HeroIllustration className="w-full" />
-        </div>
+        <HeroIllustration className="animate-rise pointer-events-none relative mt-6 max-h-[32vh] w-full max-w-2xl" />
       </section>
 
       {/* ---------------------------------------------------------- Brand strip */}
@@ -84,49 +104,16 @@ export default function HomePage() {
           <p className="text-center text-xs font-medium uppercase tracking-wider text-taupe-500">
             Boxen von Marken, denen Reisende vertrauen
           </p>
-          <div className="mt-5 flex flex-wrap items-center justify-center gap-x-10 gap-y-4 opacity-75">
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-x-12 gap-y-5 opacity-75 sm:gap-x-20">
             {BRANDS.map((brand) => (
               <span
                 key={brand}
-                className="font-display text-xl font-semibold tracking-tight text-taupe-700"
+                className="font-display text-2xl font-semibold tracking-tight text-taupe-700 sm:text-3xl"
               >
                 {brand}
               </span>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* --------------------------------------------------------- Trust strip */}
-      <section className="border-y border-line bg-paper/50">
-        <div className="mx-auto grid max-w-7xl gap-px px-5 py-10 sm:grid-cols-3 sm:px-8">
-          {[
-            {
-              icon: Wallet,
-              title: "Fairer Tagespreis",
-              text: "Vermieter:innen legen den Preis selbst fest – meist ein Bruchteil vom Neukauf.",
-            },
-            {
-              icon: ShieldCheck,
-              title: "Geprüfte Profile",
-              text: "Verifizierte Mitglieder und transparente Bewertungen schaffen Vertrauen.",
-            },
-            {
-              icon: CalendarDays,
-              title: "Flexibel buchen",
-              text: "Genau so lange, wie du sie brauchst – vom Wochenende bis zum Sommerurlaub.",
-            },
-          ].map(({ icon: Icon, title, text }) => (
-            <div key={title} className="flex gap-4 px-2 py-4">
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-line bg-cream">
-                <Icon size={18} className="text-clay-600" />
-              </span>
-              <div>
-                <h3 className="font-semibold">{title}</h3>
-                <p className="mt-1 text-sm leading-relaxed text-ink-soft">{text}</p>
-              </div>
-            </div>
-          ))}
         </div>
       </section>
 
@@ -163,6 +150,39 @@ export default function HomePage() {
           Alle ansehen
           <ArrowRight size={16} />
         </Link>
+      </section>
+
+      {/* --------------------------------------------------------- Trust strip */}
+      <section className="border-y border-line bg-paper/50">
+        <div className="mx-auto grid max-w-7xl gap-px px-5 py-10 sm:grid-cols-3 sm:px-8">
+          {[
+            {
+              icon: Wallet,
+              title: "Fairer Tagespreis",
+              text: "Vermieter:innen legen den Preis selbst fest – meist ein Bruchteil vom Neukauf.",
+            },
+            {
+              icon: ShieldCheck,
+              title: "Geprüfte Profile",
+              text: "Verifizierte Mitglieder und transparente Bewertungen schaffen Vertrauen.",
+            },
+            {
+              icon: CalendarDays,
+              title: "Flexibel buchen",
+              text: "Genau so lange, wie du sie brauchst – vom Wochenende bis zum Sommerurlaub.",
+            },
+          ].map(({ icon: Icon, title, text }) => (
+            <div key={title} className="flex gap-4 px-2 py-4">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-line bg-cream">
+                <Icon size={18} className="text-clay-600" />
+              </span>
+              <div>
+                <h3 className="font-semibold">{title}</h3>
+                <p className="mt-1 text-sm leading-relaxed text-ink-soft">{text}</p>
+              </div>
+            </div>
+          ))}
+        </div>
       </section>
 
       {/* --------------------------------------------------- How it works teaser */}

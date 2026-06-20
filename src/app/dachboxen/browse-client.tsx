@@ -8,6 +8,7 @@ import {
   DACHBOXEN,
   SIZE_LABEL,
   sizeOf,
+  matchesLocation,
   type SizeCategory,
 } from "@/lib/data";
 
@@ -33,8 +34,7 @@ export function BrowseClient({ initialOrt }: { initialOrt: string }) {
 
   const results = useMemo(() => {
     const filtered = DACHBOXEN.filter((b) => {
-      if (ort.trim() && !b.city.toLowerCase().includes(ort.trim().toLowerCase()))
-        return false;
+      if (!matchesLocation(b, ort)) return false;
       if (sizes.length && !sizes.includes(sizeOf(b.volume))) return false;
       if (brands.length && !brands.includes(b.brand)) return false;
       if (b.pricePerDay > maxPrice) return false;
@@ -80,14 +80,14 @@ export function BrowseClient({ initialOrt }: { initialOrt: string }) {
       {/* Ort */}
       <div>
         <label className="text-xs font-semibold uppercase tracking-wider text-taupe-700">
-          Ort
+          Stadt oder PLZ
         </label>
         <div className="mt-2 flex items-center gap-2 rounded-xl border border-line bg-cream px-3">
           <Search size={16} className="text-taupe-500" />
           <input
             value={ort}
             onChange={(e) => setOrt(e.target.value)}
-            placeholder="Stadt suchen"
+            placeholder="z. B. Berlin oder 10115"
             className="w-full bg-transparent py-2.5 text-sm outline-none placeholder:text-taupe-500"
           />
         </div>
