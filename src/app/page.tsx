@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import {
   ArrowRight,
   ShieldCheck,
@@ -221,12 +222,20 @@ export default function HomePage() {
 
       {/* --------------------------------------------------------- Host CTA */}
       <section className="mx-auto max-w-7xl px-5 py-20 sm:px-8">
-        <div className="relative overflow-hidden rounded-[2.5rem] bg-ink px-8 py-16 text-cream sm:px-14">
-          <div className="grain pointer-events-none absolute inset-0 opacity-50" />
-          <div
-            className="pointer-events-none absolute -right-20 -top-24 h-80 w-80 rounded-full blur-3xl"
-            style={{ background: "radial-gradient(circle,#2f7551,transparent 70%)" }}
+        <div className="relative overflow-hidden rounded-[2.5rem] border border-white/15 px-8 py-16 text-cream shadow-[0_36px_80px_-40px_rgba(17,53,29,0.7)] ring-1 ring-inset ring-white/10 sm:px-14 sm:py-20">
+          {/* photo background */}
+          <Image
+            src="/road.jpg"
+            alt="Auto mit Dachbox auf einer Bergstraße durch den Wald"
+            fill
+            priority
+            sizes="(max-width: 1280px) 100vw, 1216px"
+            className="object-cover object-[50%_58%]"
           />
+          {/* darkening filter for legibility — forest-tinted, stronger on the left */}
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#0a2114]/85 via-[#0a2114]/55 to-[#0a2114]/25" />
+          <div className="pointer-events-none absolute inset-0 bg-[#0a2114]/20" />
+
           <div className="relative max-w-xl">
             <p className="text-sm font-medium uppercase tracking-wider text-blush-300">
               Box vermieten
