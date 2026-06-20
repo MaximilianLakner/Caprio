@@ -2,8 +2,8 @@
 
 import { useActionState, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Mail, Lock, User, Loader2, Info, CheckCircle2 } from "lucide-react";
-import { Logo } from "@/components/logo";
 import { signIn, signUp } from "./actions";
 
 export function AuthForm({ redirectTo }: { redirectTo?: string }) {
@@ -16,7 +16,14 @@ export function AuthForm({ redirectTo }: { redirectTo?: string }) {
   return (
     <>
       <div className="flex flex-col items-center text-center">
-        <Logo className="h-11 w-11" />
+        <Image
+          src="/logo.png"
+          alt="Caprio"
+          width={1802}
+          height={872}
+          className="h-14 w-auto"
+          priority
+        />
         <h1 className="mt-5 font-display text-3xl font-semibold tracking-tight">
           Willkommen bei Caprio
         </h1>

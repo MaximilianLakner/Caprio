@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { NAV_LINKS, SITE_NAME } from "@/lib/site";
-import { Logo } from "@/components/logo";
 import { signOut } from "@/lib/actions/auth";
 
 type NavUser = { id: string; email: string; name?: string } | null;
@@ -19,15 +19,15 @@ export function Navbar({ user }: { user: NavUser }) {
   return (
     <header className="sticky top-0 z-50 border-b border-line/70 bg-cream/80 backdrop-blur-md">
       <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 sm:px-8">
-        <Link
-          href="/"
-          className="flex items-center gap-2.5"
-          onClick={() => setOpen(false)}
-        >
-          <Logo className="h-7 w-7" />
-          <span className="font-display text-xl font-semibold tracking-tight">
-            {SITE_NAME}
-          </span>
+        <Link href="/" className="flex items-center" onClick={() => setOpen(false)}>
+          <Image
+            src="/logo.png"
+            alt={SITE_NAME}
+            width={1802}
+            height={872}
+            className="h-9 w-auto"
+            priority
+          />
         </Link>
 
         {/* desktop nav links */}

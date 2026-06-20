@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Logo } from "@/components/logo";
+import Image from "next/image";
 import { SITE_NAME } from "@/lib/site";
 
 const columns = [
@@ -35,11 +35,14 @@ export function Footer() {
       <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8">
         <div className="grid gap-12 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <div className="max-w-xs">
-            <Link href="/" className="flex items-center gap-2.5">
-              <Logo className="h-7 w-7" />
-              <span className="font-display text-xl font-semibold tracking-tight">
-                {SITE_NAME}
-              </span>
+            <Link href="/">
+              <Image
+                src="/logo.png"
+                alt={SITE_NAME}
+                width={1802}
+                height={872}
+                className="h-8 w-auto"
+              />
             </Link>
             <p className="mt-4 text-sm leading-relaxed text-ink-soft">
               Der Marktplatz für Dachboxen von nebenan. Leih dir Stauraum für den
