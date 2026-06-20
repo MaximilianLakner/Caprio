@@ -82,7 +82,7 @@ export function BrowseClient({ initialOrt }: { initialOrt: string }) {
         <label className="text-xs font-semibold uppercase tracking-wider text-taupe-700">
           Stadt oder PLZ
         </label>
-        <div className="mt-2 flex items-center gap-2 rounded-xl border border-line bg-cream px-3">
+        <div className="mt-2 flex items-center gap-2 rounded-lg border border-line bg-cream px-3">
           <Search size={16} className="text-taupe-500" />
           <input
             value={ort}
@@ -106,7 +106,7 @@ export function BrowseClient({ initialOrt }: { initialOrt: string }) {
                 key={s}
                 type="button"
                 onClick={() => toggle(sizes, s, setSizes)}
-                className={`flex w-full items-center justify-between rounded-xl border px-3.5 py-2.5 text-left text-sm transition-colors ${
+                className={`flex w-full items-center justify-between rounded-lg border px-3.5 py-2.5 text-left text-sm transition-colors ${
                   on
                     ? "border-ink bg-ink text-cream"
                     : "border-line bg-cream text-ink hover:border-taupe-300"
@@ -186,7 +186,7 @@ export function BrowseClient({ initialOrt }: { initialOrt: string }) {
   );
 
   return (
-    <div className="mx-auto max-w-7xl px-5 py-12 sm:px-8">
+    <div className="mx-auto max-w-7xl px-3 py-12 sm:px-8">
       {/* header */}
       <div className="max-w-2xl">
         <h1 className="font-display text-4xl font-semibold tracking-tight sm:text-5xl">
@@ -201,7 +201,7 @@ export function BrowseClient({ initialOrt }: { initialOrt: string }) {
       <div className="mt-10 flex flex-col gap-10 lg:flex-row">
         {/* sidebar — desktop */}
         <aside className="hidden w-72 shrink-0 lg:block">
-          <div className="sticky top-24 rounded-3xl border border-line bg-paper/40 p-6">
+          <div className="sticky top-24 rounded-2xl border border-line bg-paper/40 p-6">
             {filterPanel}
           </div>
         </aside>
@@ -247,7 +247,7 @@ export function BrowseClient({ initialOrt }: { initialOrt: string }) {
               ))}
             </div>
           ) : (
-            <div className="rounded-3xl border border-dashed border-taupe-300 bg-paper/40 px-6 py-20 text-center">
+            <div className="rounded-2xl border border-dashed border-taupe-300 bg-paper/40 px-6 py-20 text-center">
               <p className="font-display text-xl font-semibold">
                 Keine Box passt zu diesen Filtern
               </p>
@@ -273,7 +273,7 @@ export function BrowseClient({ initialOrt }: { initialOrt: string }) {
             className="absolute inset-0 bg-ink/30 backdrop-blur-sm"
             onClick={() => setFiltersOpen(false)}
           />
-          <div className="absolute inset-x-0 bottom-0 max-h-[88vh] overflow-y-auto rounded-t-3xl bg-cream p-6 pb-10">
+          <div className="absolute inset-x-0 bottom-0 max-h-[88vh] overflow-y-auto rounded-t-2xl bg-cream p-6 pb-10">
             <div className="mb-6 flex items-center justify-between">
               <h2 className="font-display text-xl font-semibold">Filter</h2>
               <button

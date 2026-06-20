@@ -7,7 +7,7 @@ export function BoxCard({ box }: { box: Dachbox }) {
   return (
     <Link
       href={`/dachboxen/${box.id}`}
-      className="group block overflow-hidden rounded-3xl border border-line bg-cream transition-all duration-300 hover:-translate-y-1 hover:border-taupe-300 hover:shadow-[0_18px_40px_-24px_rgba(42,36,33,0.35)]"
+      className="group block overflow-hidden rounded-2xl border border-line bg-cream transition-all duration-300 hover:-translate-y-1 hover:border-taupe-300 hover:shadow-[0_18px_40px_-24px_rgba(42,36,33,0.35)]"
     >
       <div className="relative aspect-[4/3] overflow-hidden">
         <RoofboxVisual

@@ -21,7 +21,7 @@ export default function HomePage() {
   return (
     <>
       {/* ---------------------------------------------------------------- Hero */}
-      <section className="relative flex h-[calc(100svh-4rem)] flex-col items-center justify-center overflow-hidden px-5 text-center sm:px-8">
+      <section className="relative flex h-[calc(100svh-4rem)] flex-col items-center justify-center overflow-hidden px-3 text-center sm:px-8">
         <div className="grain pointer-events-none absolute inset-0" />
 
         <div className="relative flex w-full max-w-4xl flex-col items-center">
@@ -100,7 +100,7 @@ export default function HomePage() {
 
       {/* ---------------------------------------------------------- Brand strip */}
       <section className="border-t border-line bg-cream">
-        <div className="mx-auto max-w-6xl px-5 py-9 sm:px-8">
+        <div className="mx-auto max-w-6xl px-3 py-9 sm:px-8">
           <p className="text-center text-xs font-medium uppercase tracking-wider text-taupe-500">
             Boxen von Marken, denen Reisende vertrauen
           </p>
@@ -118,7 +118,7 @@ export default function HomePage() {
       </section>
 
       {/* ------------------------------------------------------ Featured boxes */}
-      <section className="mx-auto max-w-7xl px-5 py-20 sm:px-8">
+      <section className="mx-auto max-w-7xl px-3 py-20 sm:px-8">
         <div className="flex items-end justify-between gap-4">
           <div>
             <p className="text-sm font-medium uppercase tracking-wider text-taupe-700">
@@ -154,7 +154,7 @@ export default function HomePage() {
 
       {/* --------------------------------------------------------- Trust strip */}
       <section className="border-y border-line bg-paper/50">
-        <div className="mx-auto grid max-w-7xl gap-px px-5 py-10 sm:grid-cols-3 sm:px-8">
+        <div className="mx-auto grid max-w-7xl gap-px px-3 py-10 sm:grid-cols-3 sm:px-8">
           {[
             {
               icon: Wallet,
@@ -173,7 +173,7 @@ export default function HomePage() {
             },
           ].map(({ icon: Icon, title, text }) => (
             <div key={title} className="flex gap-4 px-2 py-4">
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-line bg-cream">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-line bg-cream">
                 <Icon size={18} className="text-clay-600" />
               </span>
               <div>
@@ -187,7 +187,7 @@ export default function HomePage() {
 
       {/* --------------------------------------------------- How it works teaser */}
       <section className="bg-paper/50">
-        <div className="mx-auto max-w-7xl px-5 py-20 sm:px-8">
+        <div className="mx-auto max-w-7xl px-3 py-20 sm:px-8">
           <div className="max-w-2xl">
             <p className="text-sm font-medium uppercase tracking-wider text-taupe-700">
               In drei Schritten
@@ -217,7 +217,7 @@ export default function HomePage() {
             ].map((step) => (
               <div
                 key={step.n}
-                className="relative rounded-3xl border border-line bg-cream p-7"
+                className="relative rounded-2xl border border-blush-200 bg-blush-100 p-7"
               >
                 <span className="font-display text-4xl font-semibold text-taupe-300">
                   {step.n}
@@ -241,8 +241,8 @@ export default function HomePage() {
       </section>
 
       {/* --------------------------------------------------------- Host CTA */}
-      <section className="mx-auto max-w-7xl px-5 py-20 sm:px-8">
-        <div className="relative overflow-hidden rounded-[2.5rem] border border-white/15 px-8 py-16 text-cream shadow-[0_36px_80px_-40px_rgba(17,53,29,0.7)] ring-1 ring-inset ring-white/10 sm:px-14 sm:py-20">
+      <section className="mx-auto max-w-7xl px-3 py-20 sm:px-8">
+        <div className="relative overflow-hidden rounded-3xl border border-white/15 px-8 py-16 text-cream shadow-[0_36px_80px_-40px_rgba(17,53,29,0.7)] ring-1 ring-inset ring-white/10 sm:px-14 sm:py-20">
           {/* photo background */}
           <Image
             src="/road.jpg"
