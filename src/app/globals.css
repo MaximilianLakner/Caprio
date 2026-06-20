@@ -1,26 +1,109 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ----------------------------------------------------------------------------
+   Caprio — fresh, four-colour palette
+   · Forest green  #11351d  (deep — text, primary actions)
+   · Sage / mint   #a6d2b6  (soft green accent)
+   · Sky blue-grey #afc4cf  (cool secondary accent)
+   · White / paper #ffffff  (surfaces)
+   The neutral "taupe-*" scale is repurposed as a calm green-grey ramp and the
+   "blush-*"/"clay-*" tokens become sage/forest accents, so every existing
+   component recolours cohesively without renaming utility classes.
+---------------------------------------------------------------------------- */
+@theme {
+  /* surfaces — paper white with the faintest green wash */
+  --color-cream: #f6faf7;
+  --color-paper: #ecf3ee;
+  --color-sand: #dfeae2;
+
+  /* neutral green-grey ramp (was "taupe") — blends sky + forest */
+  --color-taupe-100: #e4ede7;
+  --color-taupe-200: #cdddd4;
+  --color-taupe-300: #afc4cf; /* sky blue-grey */
+  --color-taupe-500: #748d83;
+  --color-taupe-700: #3c5749;
+
+  /* sage / mint accents (was "blush") */
+  --color-blush-100: #e7f2eb;
+  --color-blush-200: #c9e6d4;
+  --color-blush-300: #a6d2b6; /* sage / mint */
+
+  /* forest green accents (was "clay") */
+  --color-clay-500: #2f7551;
+  --color-clay-600: #1f5e3c; /* accessible green accent */
+
+  /* ink — deep forest for text */
+  --color-ink: #11351d;
+  --color-ink-soft: #4c6356;
+  --color-line: #d7e4dc;
+
+  /* named brand tokens (use freely in new code) */
+  --color-forest: #11351d;
+  --color-sage: #a6d2b6;
+  --color-sky: #afc4cf;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-fraunces);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ----------------------------------------------------------------------------
+   Base
+---------------------------------------------------------------------------- */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-cream);
+    color: var(--color-ink);
+    font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background-color: var(--color-blush-200);
+    color: var(--color-ink);
+  }
+
+  ::-webkit-scrollbar {
+    width: 11px;
+    height: 11px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--color-taupe-300);
+    border: 3px solid var(--color-cream);
+    border-radius: 999px;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ----------------------------------------------------------------------------
+   Utilities
+---------------------------------------------------------------------------- */
+@utility font-display {
+  font-family: var(--font-display), ui-serif, Georgia, serif;
+  font-optical-sizing: auto;
+}
+
+/* very fine paper grain so flat fills don't read as "generated" */
+@utility grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@utility animate-rise {
+  animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
