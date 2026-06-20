@@ -23,9 +23,9 @@ export function Navbar({ user }: { user: NavUser }) {
           <Image
             src="/logo.png"
             alt={SITE_NAME}
-            width={1802}
-            height={872}
-            className="h-12 w-auto"
+            width={922}
+            height={636}
+            className="h-14 w-auto"
             priority
           />
         </Link>

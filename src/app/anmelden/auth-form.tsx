@@ -19,9 +19,9 @@ export function AuthForm({ redirectTo }: { redirectTo?: string }) {
         <Image
           src="/logo.png"
           alt="Caprio"
-          width={1802}
-          height={872}
-          className="h-16 w-auto"
+          width={922}
+          height={636}
+          className="h-24 w-auto"
           priority
         />
         <h1 className="mt-5 font-display text-3xl font-semibold tracking-tight">
@@ -55,6 +55,7 @@ export function AuthForm({ redirectTo }: { redirectTo?: string }) {
       <div className="mt-6 rounded-2xl border border-line bg-cream p-6 shadow-[0_18px_50px_-32px_rgba(42,36,33,0.25)]">
         {tab === "login" ? (
           <form action={loginAction} className="space-y-4">
+            {redirectTo && <input type="hidden" name="redirect" value={redirectTo} />}
             <Field label="E-Mail" icon={<Mail size={16} />} name="email" type="email" placeholder="du@beispiel.de" />
             <Field label="Passwort" icon={<Lock size={16} />} name="password" type="password" placeholder="••••••••" />
             {loginState?.error && <ErrorBanner message={loginState.error} />}
@@ -62,9 +63,11 @@ export function AuthForm({ redirectTo }: { redirectTo?: string }) {
           </form>
         ) : (
           <form action={registerAction} className="space-y-4">
+            {redirectTo && <input type="hidden" name="redirect" value={redirectTo} />}
             <Field label="Dein Name" icon={<User size={16} />} name="name" type="text" placeholder="Max Mustermann" />
             <Field label="E-Mail" icon={<Mail size={16} />} name="email" type="email" placeholder="du@beispiel.de" />
-            <Field label="Passwort" icon={<Lock size={16} />} name="password" type="password" placeholder="mindestens 6 Zeichen" />
+            <Field label="Passwort" icon={<Lock size={16} />} name="password" type="password" placeholder="mindestens 6 Zeichen" minLength={6} />
+            <Field label="Passwort bestätigen" icon={<Lock size={16} />} name="passwordConfirm" type="password" placeholder="Passwort wiederholen" minLength={6} />
             {registerState?.error && <ErrorBanner message={registerState.error} />}
             {registerState?.message && <SuccessBanner message={registerState.message} />}
             <SubmitButton label="Konto erstellen" pending={pending} />
@@ -88,12 +91,14 @@ function Field({
   name,
   type,
   placeholder,
+  minLength,
 }: {
   label: string;
   icon: React.ReactNode;
   name: string;
   type: string;
   placeholder: string;
+  minLength?: number;
 }) {
   return (
     <div>
@@ -107,6 +112,7 @@ function Field({
           type={type}
           placeholder={placeholder}
           required
+          minLength={minLength}
           className="w-full bg-transparent py-2.5 text-sm outline-none placeholder:text-taupe-500"
         />
       </div>

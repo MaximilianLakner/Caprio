@@ -26,7 +26,7 @@ export default function HomePage() {
 
         {/* hero illustration — large background object anchored bottom-centre,
             its sun-halo arch rises up just behind the search bar */}
-        <HeroIllustration className="animate-rise pointer-events-none absolute bottom-0 left-1/2 z-0 w-[175%] max-w-none -translate-x-1/2 sm:w-[min(150%,1000px)]" />
+        <HeroIllustration className="animate-rise pointer-events-none absolute bottom-0 left-1/2 z-0 w-[160%] max-w-none -translate-x-1/2 sm:w-[min(140%,910px)]" />
 
         <div className="relative z-10 flex w-full max-w-4xl flex-col items-center pb-[34vh] sm:pb-[38vh]">
           <span className="animate-rise inline-flex items-center gap-2 rounded-full border border-line bg-paper/70 px-3 py-1 text-xs font-medium text-taupe-700">

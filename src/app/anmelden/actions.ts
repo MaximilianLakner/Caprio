@@ -6,38 +6,78 @@ import { createClient } from "@/lib/supabase/server";
 
 export type AuthState = { error?: string; message?: string } | null;
 
+/** Map common Supabase auth errors to friendly German messages. */
+function translateAuthError(message: string): string {
+  const m = message.toLowerCase();
+  if (m.includes("invalid login credentials"))
+    return "E-Mail oder Passwort ist falsch.";
+  if (m.includes("email not confirmed"))
+    return "Bitte bestätige zuerst deine E-Mail-Adresse. Schau in dein Postfach.";
+  if (m.includes("user already registered") || m.includes("already been registered"))
+    return "Mit dieser E-Mail gibt es bereits ein Konto. Melde dich stattdessen an.";
+  if (m.includes("password should be at least"))
+    return "Das Passwort muss mindestens 6 Zeichen lang sein.";
+  if (m.includes("unable to validate email") || m.includes("invalid email"))
+    return "Bitte gib eine gültige E-Mail-Adresse ein.";
+  if (m.includes("for security purposes") || m.includes("rate limit"))
+    return "Zu viele Versuche. Bitte warte einen Moment und versuch es erneut.";
+  return message;
+}
+
 export async function signIn(
   prevState: AuthState,
   formData: FormData
 ): Promise<AuthState> {
+  const email = (formData.get("email") as string)?.trim();
+  const password = formData.get("password") as string;
+  const redirectTo = (formData.get("redirect") as string) || "/meine-boxen";
+
+  if (!email || !password) {
+    return { error: "Bitte E-Mail und Passwort eingeben." };
+  }
+
   const supabase = await createClient();
-  const { error } = await supabase.auth.signInWithPassword({
-    email: formData.get("email") as string,
-    password: formData.get("password") as string,
-  });
-  if (error) return { error: error.message };
+  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  if (error) return { error: translateAuthError(error.message) };
+
   revalidatePath("/", "layout");
-  redirect("/meine-boxen");
+  redirect(redirectTo);
 }
 
 export async function signUp(
   prevState: AuthState,
   formData: FormData
 ): Promise<AuthState> {
+  const name = (formData.get("name") as string)?.trim();
+  const email = (formData.get("email") as string)?.trim();
+  const password = formData.get("password") as string;
+  const passwordConfirm = formData.get("passwordConfirm") as string;
+  const redirectTo = (formData.get("redirect") as string) || "/meine-boxen";
+
+  // Validation
+  if (!name) return { error: "Bitte gib deinen Namen ein." };
+  if (!email) return { error: "Bitte gib eine E-Mail-Adresse ein." };
+  if (!password || password.length < 6)
+    return { error: "Das Passwort muss mindestens 6 Zeichen lang sein." };
+  if (password !== passwordConfirm)
+    return { error: "Die beiden Passwörter stimmen nicht überein." };
+
   const supabase = await createClient();
   const { data, error } = await supabase.auth.signUp({
-    email: formData.get("email") as string,
-    password: formData.get("password") as string,
-    options: { data: { name: formData.get("name") as string } },
+    email,
+    password,
+    options: { data: { name } },
   });
-  if (error) return { error: error.message };
-  // Supabase may require email confirmation
+  if (error) return { error: translateAuthError(error.message) };
+
+  // If e-mail confirmation is required, Supabase returns a user but no session.
   if (data.user && !data.session) {
     return {
       message:
-        "Fast geschafft! Bitte bestätige deine E-Mail-Adresse – dann kannst du dich anmelden.",
+        "Fast geschafft! Wir haben dir eine E-Mail geschickt – bestätige deine Adresse und melde dich dann an.",
     };
   }
+
   revalidatePath("/", "layout");
-  redirect("/meine-boxen");
+  redirect(redirectTo);
 }

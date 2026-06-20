@@ -1,7 +1,15 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+import type { CSSProperties } from "react";
+
 /**
  * Caprio hero illustration — a friendly travel scene (car with a roof box on a
  * little island) framed by floating motifs. Pure SVG, palette-only colours:
  * forest #11351d · sage #a6d2b6 · sky #afc4cf · mint #c9e6d4 · white.
+ *
+ * The floating edge objects (clouds, map pin, suitcase, sparkles) get a gentle
+ * parallax drift driven by the page scroll position via the `--scroll` CSS var.
  */
 export function HeroIllustration({ className = "" }: { className?: string }) {
   const ink = "#11351d";
@@ -9,6 +17,31 @@ export function HeroIllustration({ className = "" }: { className?: string }) {
   const sky = "#afc4cf";
   const mint = "#c9e6d4";
   const deep = "#1f5e3c";
+
+  const svgRef = useRef<SVGSVGElement>(null);
+
+  useEffect(() => {
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      svgRef.current?.style.setProperty("--scroll", String(window.scrollY));
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
+
+  // parallax helper: drift an element by `factor` px per scrolled px
+  const par = (factor: number): CSSProperties => ({
+    transform: `translateY(calc(var(--scroll, 0) * ${factor}px))`,
+    willChange: "transform",
+  });
 
   const Star = ({
     x,
@@ -37,27 +70,31 @@ export function HeroIllustration({ className = "" }: { className?: string }) {
 
   return (
     <svg
+      ref={svgRef}
       viewBox="0 0 760 470"
       className={className}
       role="img"
       aria-label="Caprio – mit der Dachbox unterwegs"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      style={{ "--scroll": 0 } as CSSProperties}
     >
       {/* sun halo */}
       <circle cx="380" cy="180" r="130" fill={mint} opacity="0.5" />
       <circle cx="380" cy="158" r="52" fill={sage} stroke={ink} strokeWidth="3" />
 
-      {/* clouds */}
-      <g stroke={ink} strokeWidth="3">
-        <path
-          d="M150 150c-16 0-26 10-26 21h70c0-11-9-17-17-17 0-2-2-4-5-4-2 0-3 1-4 2-3-2-9-2-13-2Z"
-          fill="#ffffff"
-        />
-        <path
-          d="M566 110c-14 0-22 9-22 18h60c0-9-8-15-15-15 0-2-2-3-4-3-2 0-3 1-4 2-3-2-8-2-15-2Z"
-          fill="#ffffff"
-        />
+      {/* clouds (parallax) */}
+      <g style={par(-0.06)}>
+        <g stroke={ink} strokeWidth="3">
+          <path
+            d="M150 150c-16 0-26 10-26 21h70c0-11-9-17-17-17 0-2-2-4-5-4-2 0-3 1-4 2-3-2-9-2-13-2Z"
+            fill="#ffffff"
+          />
+          <path
+            d="M566 110c-14 0-22 9-22 18h60c0-9-8-15-15-15 0-2-2-3-4-3-2 0-3 1-4 2-3-2-8-2-15-2Z"
+            fill="#ffffff"
+          />
+        </g>
       </g>
 
       {/* mountains */}
@@ -122,32 +159,46 @@ export function HeroIllustration({ className = "" }: { className?: string }) {
         <circle cx="430" cy="372" r="6" fill={deep} stroke="none" />
       </g>
 
-      {/* floating badges */}
+      {/* floating badges (parallax) */}
       {/* map pin */}
-      <g transform="translate(150 250)">
-        <circle r="30" fill="#ffffff" stroke={ink} strokeWidth="3" />
-        <path
-          d="M0 -14c-9 0-15 7-15 15 0 9 15 19 15 19s15-10 15-19c0-8-6-15-15-15Z"
-          fill={sage}
-          stroke={ink}
-          strokeWidth="3"
-          strokeLinejoin="round"
-        />
-        <circle cy="1" r="5" fill="#ffffff" stroke={ink} strokeWidth="2" />
+      <g style={par(0.11)}>
+        <g transform="translate(150 250)">
+          <circle r="30" fill="#ffffff" stroke={ink} strokeWidth="3" />
+          <path
+            d="M0 -14c-9 0-15 7-15 15 0 9 15 19 15 19s15-10 15-19c0-8-6-15-15-15Z"
+            fill={sage}
+            stroke={ink}
+            strokeWidth="3"
+            strokeLinejoin="round"
+          />
+          <circle cy="1" r="5" fill="#ffffff" stroke={ink} strokeWidth="2" />
+        </g>
       </g>
       {/* suitcase */}
-      <g transform="translate(615 232)" stroke={ink} strokeWidth="3" strokeLinejoin="round">
-        <rect x="-22" y="-16" width="44" height="34" rx="7" fill={sky} />
-        <path d="M-9 -16v-6h18v6" fill="none" />
-        <path d="M-22 -3h44" />
+      <g style={par(0.14)}>
+        <g transform="translate(615 232)" stroke={ink} strokeWidth="3" strokeLinejoin="round">
+          <rect x="-22" y="-16" width="44" height="34" rx="7" fill={sky} />
+          <path d="M-9 -16v-6h18v6" fill="none" />
+          <path d="M-22 -3h44" />
+        </g>
       </g>
 
-      {/* sparkles */}
-      <Star x={250} y={150} s={11} fill={ink} />
-      <Star x={510} y={195} s={9} fill={deep} />
-      <Star x={120} y={330} s={8} fill={sage} />
-      <Star x={650} y={320} s={10} fill={ink} />
-      <Star x={470} y={120} s={7} fill={sky} />
+      {/* sparkles (parallax, varied depths) */}
+      <g style={par(-0.09)}>
+        <Star x={250} y={150} s={11} fill={ink} />
+      </g>
+      <g style={par(0.08)}>
+        <Star x={510} y={195} s={9} fill={deep} />
+      </g>
+      <g style={par(0.13)}>
+        <Star x={120} y={330} s={8} fill={sage} />
+      </g>
+      <g style={par(-0.11)}>
+        <Star x={650} y={320} s={10} fill={ink} />
+      </g>
+      <g style={par(0.06)}>
+        <Star x={470} y={120} s={7} fill={sky} />
+      </g>
     </svg>
   );
 }
