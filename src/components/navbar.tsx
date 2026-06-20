@@ -25,7 +25,7 @@ export function Navbar({ user }: { user: NavUser }) {
             alt={SITE_NAME}
             width={1802}
             height={872}
-            className="h-9 w-auto"
+            className="h-12 w-auto"
             priority
           />
         </Link>

@@ -21,7 +21,7 @@ export function AuthForm({ redirectTo }: { redirectTo?: string }) {
           alt="Caprio"
           width={1802}
           height={872}
-          className="h-14 w-auto"
+          className="h-16 w-auto"
           priority
         />
         <h1 className="mt-5 font-display text-3xl font-semibold tracking-tight">

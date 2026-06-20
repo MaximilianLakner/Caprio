@@ -24,7 +24,11 @@ export default function HomePage() {
       <section className="relative flex h-[calc(100svh-4rem)] flex-col items-center justify-center overflow-hidden px-3 text-center sm:px-8">
         <div className="grain pointer-events-none absolute inset-0" />
 
-        <div className="relative flex w-full max-w-4xl flex-col items-center">
+        {/* hero illustration — large background object anchored bottom-centre,
+            its sun-halo arch rises up just behind the search bar */}
+        <HeroIllustration className="animate-rise pointer-events-none absolute bottom-0 left-1/2 z-0 w-[175%] max-w-none -translate-x-1/2 sm:w-[min(150%,1000px)]" />
+
+        <div className="relative z-10 flex w-full max-w-4xl flex-col items-center pb-[34vh] sm:pb-[38vh]">
           <span className="animate-rise inline-flex items-center gap-2 rounded-full border border-line bg-paper/70 px-3 py-1 text-xs font-medium text-taupe-700">
             <Sparkles size={13} className="text-clay-500" />
             <span className="sm:hidden">Mieten &amp; vermieten · Mensch zu Mensch</span>
@@ -94,9 +98,6 @@ export default function HomePage() {
             </Link>
           </div>
         </div>
-
-        {/* hero illustration */}
-        <HeroIllustration className="animate-rise pointer-events-none relative mt-6 max-h-[32vh] w-full max-w-2xl" />
       </section>
 
       {/* ---------------------------------------------------------- Brand strip */}
