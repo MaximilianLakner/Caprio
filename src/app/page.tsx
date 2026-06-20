@@ -27,7 +27,8 @@ export default function HomePage() {
         <div className="relative flex w-full max-w-4xl flex-col items-center">
           <span className="animate-rise inline-flex items-center gap-2 rounded-full border border-line bg-paper/70 px-3 py-1 text-xs font-medium text-taupe-700">
             <Sparkles size={13} className="text-clay-500" />
-            Dachboxen mieten &amp; vermieten — von Mensch zu Mensch
+            <span className="sm:hidden">Mieten &amp; vermieten · Mensch zu Mensch</span>
+            <span className="hidden sm:inline">Dachboxen mieten &amp; vermieten — von Mensch zu Mensch</span>
           </span>
 
           <h1 className="animate-rise mt-6 max-w-3xl font-display text-[2.6rem] font-semibold leading-[1.04] tracking-tight sm:text-6xl lg:text-7xl">

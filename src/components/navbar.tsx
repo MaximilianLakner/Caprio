@@ -6,10 +6,15 @@ import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { NAV_LINKS, SITE_NAME } from "@/lib/site";
 import { Logo } from "@/components/logo";
+import { signOut } from "@/lib/actions/auth";
 
-export function Navbar() {
+type NavUser = { id: string; email: string; name?: string } | null;
+
+export function Navbar({ user }: { user: NavUser }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+
+  const displayName = user?.name ?? user?.email?.split("@")[0] ?? "";
 
   return (
     <header className="sticky top-0 z-50 border-b border-line/70 bg-cream/80 backdrop-blur-md">
@@ -25,7 +30,7 @@ export function Navbar() {
           </span>
         </Link>
 
-        {/* desktop */}
+        {/* desktop nav links */}
         <div className="hidden items-center gap-1 md:flex">
           {NAV_LINKS.map((link) => {
             const active = pathname.startsWith(link.href);
@@ -45,13 +50,33 @@ export function Navbar() {
           })}
         </div>
 
+        {/* desktop auth */}
         <div className="hidden items-center gap-2 md:flex">
-          <Link
-            href="/anmelden"
-            className="rounded-full px-4 py-2 text-sm font-medium text-ink-soft transition-colors hover:text-ink"
-          >
-            Anmelden
-          </Link>
+          {user ? (
+            <>
+              <Link
+                href="/meine-boxen"
+                className="rounded-full px-4 py-2 text-sm font-medium text-ink-soft transition-colors hover:text-ink"
+              >
+                {displayName}
+              </Link>
+              <form action={signOut}>
+                <button
+                  type="submit"
+                  className="rounded-full px-4 py-2 text-sm font-medium text-ink-soft transition-colors hover:text-ink"
+                >
+                  Abmelden
+                </button>
+              </form>
+            </>
+          ) : (
+            <Link
+              href="/anmelden"
+              className="rounded-full px-4 py-2 text-sm font-medium text-ink-soft transition-colors hover:text-ink"
+            >
+              Anmelden
+            </Link>
+          )}
           <Link
             href="/dachboxen"
             className="rounded-full bg-ink px-4 py-2 text-sm font-medium text-cream transition-transform hover:-translate-y-px hover:bg-ink/90"
@@ -85,15 +110,35 @@ export function Navbar() {
                 {link.label}
               </Link>
             ))}
+            {user && (
+              <Link
+                href="/meine-boxen"
+                onClick={() => setOpen(false)}
+                className="border-b border-line/60 py-3 text-base font-medium text-ink"
+              >
+                Meine Boxen
+              </Link>
+            )}
           </div>
           <div className="mt-5 flex flex-col gap-3">
-            <Link
-              href="/anmelden"
-              onClick={() => setOpen(false)}
-              className="rounded-full border border-line px-4 py-3 text-center text-sm font-medium text-ink"
-            >
-              Anmelden
-            </Link>
+            {user ? (
+              <form action={signOut}>
+                <button
+                  type="submit"
+                  className="w-full rounded-full border border-line px-4 py-3 text-center text-sm font-medium text-ink"
+                >
+                  Abmelden
+                </button>
+              </form>
+            ) : (
+              <Link
+                href="/anmelden"
+                onClick={() => setOpen(false)}
+                className="rounded-full border border-line px-4 py-3 text-center text-sm font-medium text-ink"
+              >
+                Anmelden
+              </Link>
+            )}
             <Link
               href="/dachboxen"
               onClick={() => setOpen(false)}

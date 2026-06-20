@@ -27,18 +27,33 @@ export const metadata: Metadata = {
     "Leih dir eine Dachbox für den nächsten Trip – oder verdiene Geld mit deiner, wenn sie gerade in der Garage steht. Von Mensch zu Mensch, tageweise.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
+  // Read authenticated user; degrades gracefully if Supabase isn't configured yet.
+  let user: { id: string; email: string; name?: string } | null = null;
+  if (process.env.NEXT_PUBLIC_SUPABASE_URL) {
+    try {
+      const { createClient } = await import("@/lib/supabase/server");
+      const supabase = await createClient();
+      const {
+        data: { user: u },
+      } = await supabase.auth.getUser();
+      if (u) {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("name")
+          .eq("id", u.id)
+          .single();
+        user = { id: u.id, email: u.email!, name: profile?.name };
+      }
+    } catch {}
+  }
+
   return (
-    <html
-      lang="de"
-      className={`${inter.variable} ${fraunces.variable} h-full`}
-    >
-      <body className="min-h-full flex flex-col">
-        <Navbar />
+    <html lang="de" className={`${inter.variable} ${fraunces.variable} h-full`}>
+      <body className="flex min-h-full flex-col">
+        <Navbar user={user} />
         <main className="flex-1">{children}</main>
         <Footer />
       </body>
