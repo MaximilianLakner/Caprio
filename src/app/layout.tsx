@@ -64,6 +64,10 @@ export default async function RootLayout({
   return (
     <html lang="de" className={`${inter.variable} ${fraunces.variable} h-full`}>
       <body className="flex min-h-full flex-col">
+        {/* If JS is unavailable, reveal-on-scroll content must still be visible */}
+        <noscript>
+          <style>{`[data-reveal]{opacity:1!important;transform:none!important}`}</style>
+        </noscript>
         <Navbar user={user} />
         <main className="flex-1">{children}</main>
         <Footer />

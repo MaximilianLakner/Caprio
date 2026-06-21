@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
+import { Reveal } from "@/components/reveal";
 import {
   Search,
   CalendarCheck,
@@ -129,7 +130,7 @@ export default function SoFunktioniertsPage() {
 
         <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {renterSteps.map((step, i) => (
-            <div key={step.title} className="relative">
+            <Reveal key={step.title} delay={i * 80} className="relative">
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-line bg-cream">
                 <step.icon size={20} className="text-clay-600" />
               </div>
@@ -138,16 +139,16 @@ export default function SoFunktioniertsPage() {
               </p>
               <h3 className="mt-1 text-lg font-semibold">{step.title}</h3>
               <p className="mt-2 text-sm leading-relaxed text-ink-soft">{step.text}</p>
-            </div>
+            </Reveal>
           ))}
         </div>
 
         <Link
           href="/dachboxen"
-          className="mt-12 inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3.5 text-sm font-semibold text-cream transition-transform hover:-translate-y-px"
+          className="group mt-12 inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3.5 text-sm font-semibold text-cream transition-transform hover:-translate-y-px"
         >
           Boxen ansehen
-          <ArrowRight size={16} />
+          <ArrowRight size={16} className="transition-transform duration-200 group-hover:translate-x-0.5" />
         </Link>
       </section>
 
@@ -165,8 +166,9 @@ export default function SoFunktioniertsPage() {
 
           <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             {hostSteps.map((step, i) => (
-              <div
+              <Reveal
                 key={step.title}
+                delay={i * 80}
                 className="rounded-3xl border border-line bg-cream p-6"
               >
                 <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blush-100">
@@ -179,16 +181,16 @@ export default function SoFunktioniertsPage() {
                 <p className="mt-2 text-sm leading-relaxed text-ink-soft">
                   {step.text}
                 </p>
-              </div>
+              </Reveal>
             ))}
           </div>
 
           <Link
             href="/vermieten"
-            className="mt-12 inline-flex items-center gap-2 rounded-full border border-ink px-6 py-3.5 text-sm font-semibold text-ink transition-colors hover:bg-ink hover:text-cream"
+            className="group mt-12 inline-flex items-center gap-2 rounded-full border border-ink px-6 py-3.5 text-sm font-semibold text-ink transition-colors hover:bg-ink hover:text-cream"
           >
             Mehr zum Vermieten
-            <ArrowRight size={16} />
+            <ArrowRight size={16} className="transition-transform duration-200 group-hover:translate-x-0.5" />
           </Link>
         </div>
       </section>
@@ -212,15 +214,16 @@ export default function SoFunktioniertsPage() {
               title: "Faire, klare Preise",
               text: "Vermieter:innen setzen ihren Tagespreis selbst. Keine versteckten Kosten, alles transparent vor der Buchung.",
             },
-          ].map(({ icon: Icon, title, text }) => (
-            <div
+          ].map(({ icon: Icon, title, text }, i) => (
+            <Reveal
               key={title}
+              delay={i * 90}
               className="rounded-3xl border border-line bg-paper/40 p-7"
             >
               <Icon size={22} className="text-clay-600" />
               <h3 className="mt-4 text-lg font-semibold">{title}</h3>
               <p className="mt-2 text-sm leading-relaxed text-ink-soft">{text}</p>
-            </div>
+            </Reveal>
           ))}
         </div>
       </section>
@@ -231,10 +234,10 @@ export default function SoFunktioniertsPage() {
           Häufige Fragen
         </h2>
         <div className="mt-10 space-y-3">
-          {faqs.map((faq) => (
+          {faqs.map((faq, i) => (
+            <Reveal key={faq.q} delay={i * 70}>
             <details
-              key={faq.q}
-              className="group rounded-2xl border border-line bg-cream px-6 py-5 [&_summary::-webkit-details-marker]:hidden"
+              className="group rounded-2xl border border-line bg-cream px-6 py-5 transition-colors hover:border-taupe-300 [&_summary::-webkit-details-marker]:hidden"
             >
               <summary className="flex cursor-pointer items-center justify-between gap-4 font-semibold">
                 {faq.q}
@@ -244,6 +247,7 @@ export default function SoFunktioniertsPage() {
               </summary>
               <p className="mt-3 text-sm leading-relaxed text-ink-soft">{faq.a}</p>
             </details>
+            </Reveal>
           ))}
         </div>
       </section>
