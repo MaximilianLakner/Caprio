@@ -16,12 +16,15 @@ alter table public.profiles add column if not exists avatar_url text;
 
 alter table public.profiles enable row level security;
 
+drop policy if exists "Profiles are viewable by everyone" on public.profiles;
 create policy "Profiles are viewable by everyone"
   on public.profiles for select using (true);
 
+drop policy if exists "Users can insert their own profile" on public.profiles;
 create policy "Users can insert their own profile"
   on public.profiles for insert with check (auth.uid() = id);
 
+drop policy if exists "Users can update their own profile" on public.profiles;
 create policy "Users can update their own profile"
   on public.profiles for update using (auth.uid() = id);
 
@@ -63,15 +66,19 @@ create table if not exists public.dachboxen (
 
 alter table public.dachboxen enable row level security;
 
+drop policy if exists "Listings are viewable by everyone" on public.dachboxen;
 create policy "Listings are viewable by everyone"
   on public.dachboxen for select using (true);
 
+drop policy if exists "Authenticated users can create listings" on public.dachboxen;
 create policy "Authenticated users can create listings"
   on public.dachboxen for insert with check (auth.uid() = host_id);
 
+drop policy if exists "Users can update their own listings" on public.dachboxen;
 create policy "Users can update their own listings"
   on public.dachboxen for update using (auth.uid() = host_id);
 
+drop policy if exists "Users can delete their own listings" on public.dachboxen;
 create policy "Users can delete their own listings"
   on public.dachboxen for delete using (auth.uid() = host_id);
 
