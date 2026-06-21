@@ -138,7 +138,7 @@ export default function HomePage() {
           </Link>
         </div>
 
-        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {featured.map((box) => (
             <BoxCard key={box.id} box={box} />
           ))}
@@ -198,7 +198,7 @@ export default function HomePage() {
             </h2>
           </div>
 
-          <div className="mt-12 grid gap-8 md:grid-cols-3">
+          <div className="mt-12 grid gap-5 md:grid-cols-3">
             {[
               {
                 n: "01",

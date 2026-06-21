@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, Check } from "lucide-react";
-import { RoofboxVisual } from "@/components/roofbox-visual";
 import { EarningsEstimator } from "./earnings-estimator";
 
 export const metadata: Metadata = {
@@ -32,7 +32,7 @@ export default function VermietenPage() {
           </h1>
           <p className="mt-6 max-w-md text-lg leading-relaxed text-ink-soft">
             Die meisten Dachboxen werden ein paar Wochen im Jahr genutzt – den Rest
-            der Zeit stehen sie im Weg. Bei Dachgut wird daraus ein entspannter
+            der Zeit stehen sie im Weg. Bei Caprio wird daraus ein entspannter
             Nebenverdienst.
           </p>
 
@@ -57,8 +57,15 @@ export default function VermietenPage() {
         </div>
 
         <div className="relative">
-          <div className="overflow-hidden rounded-[2.5rem] border border-line shadow-[0_30px_70px_-35px_rgba(42,36,33,0.45)]">
-            <RoofboxVisual tone={2} className="aspect-[5/4] w-full" />
+          <div className="relative aspect-[5/4] overflow-hidden rounded-[2.5rem] border border-line shadow-[0_30px_70px_-35px_rgba(42,36,33,0.45)]">
+            <Image
+              src="/dachbox-vermieten.jpg"
+              alt="Auto mit montierter Dachbox"
+              fill
+              priority
+              sizes="(max-width: 1024px) 100vw, 600px"
+              className="object-cover"
+            />
           </div>
         </div>
       </section>

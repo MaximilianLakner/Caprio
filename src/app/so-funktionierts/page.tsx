@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import {
   Search,
   CalendarCheck,
@@ -18,7 +19,7 @@ import {
 export const metadata: Metadata = {
   title: "So funktioniert's",
   description:
-    "Wie Dachgut funktioniert – für alle, die eine Dachbox mieten, und alle, die ihre eigene vermieten möchten.",
+    "Wie Caprio funktioniert – für alle, die eine Dachbox mieten, und alle, die ihre eigene vermieten möchten.",
 };
 
 const renterSteps = [
@@ -69,7 +70,7 @@ const hostSteps = [
 
 const faqs = [
   {
-    q: "Was kostet die Nutzung von Dachgut?",
+    q: "Was kostet die Nutzung von Caprio?",
     a: "Für Mieter:innen kommt zum Tagespreis eine kleine Servicegebühr dazu. Vermieter:innen behalten den Großteil ihres Tagespreises. Im aktuellen MVP ist alles noch unverbindlich – die Zahlungsabwicklung über Stripe folgt.",
   },
   {
@@ -90,16 +91,25 @@ export default function SoFunktioniertsPage() {
   return (
     <div className="pb-8">
       {/* hero */}
-      <section className="border-b border-line bg-paper/40">
-        <div className="mx-auto max-w-3xl px-5 py-20 text-center sm:px-8">
-          <p className="text-sm font-medium uppercase tracking-wider text-taupe-700">
+      <section className="relative overflow-hidden border-b border-line">
+        <Image
+          src="/dachbox-hero.jpg"
+          alt="Unterwegs mit der Dachbox"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0a2114]/80 via-[#0a2114]/65 to-[#0a2114]/85" />
+        <div className="relative mx-auto max-w-3xl px-5 py-24 text-center text-cream sm:px-8 sm:py-28">
+          <p className="text-sm font-medium uppercase tracking-wider text-blush-300">
             So funktioniert's
           </p>
           <h1 className="mt-3 font-display text-4xl font-semibold leading-tight tracking-tight sm:text-6xl">
             Stauraum teilen, statt Boxen kaufen
           </h1>
-          <p className="mt-5 text-lg leading-relaxed text-ink-soft">
-            Dachgut bringt Menschen zusammen, die eine Dachbox brauchen, mit
+          <p className="mt-5 text-lg leading-relaxed text-cream/85">
+            Caprio bringt Menschen zusammen, die eine Dachbox brauchen, mit
             Menschen, deren Box gerade ungenutzt herumsteht. Gut für den Geldbeutel,
             gut für die Umwelt.
           </p>
@@ -117,7 +127,7 @@ export default function SoFunktioniertsPage() {
           </h2>
         </div>
 
-        <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {renterSteps.map((step, i) => (
             <div key={step.title} className="relative">
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-line bg-cream">
@@ -153,7 +163,7 @@ export default function SoFunktioniertsPage() {
             </h2>
           </div>
 
-          <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             {hostSteps.map((step, i) => (
               <div
                 key={step.title}
@@ -185,7 +195,7 @@ export default function SoFunktioniertsPage() {
 
       {/* trust */}
       <section className="mx-auto max-w-7xl px-5 py-20 sm:px-8">
-        <div className="grid gap-6 md:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-3">
           {[
             {
               icon: ShieldCheck,

@@ -51,7 +51,7 @@ export function InseratForm() {
   const tooFew = files.length < MIN_IMAGES;
 
   return (
-    <form action={formAction} className="space-y-6">
+    <form action={formAction} className="space-y-4">
       {/* ---------------- Fotos ---------------- */}
       <Section
         title="Fotos"

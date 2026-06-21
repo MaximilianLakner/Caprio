@@ -3,15 +3,25 @@
 import { useActionState, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Mail, Lock, User, Loader2, Info, CheckCircle2 } from "lucide-react";
-import { signIn, signUp } from "./actions";
+import { Mail, Lock, User, Loader2, Info, CheckCircle2, ArrowLeft } from "lucide-react";
+import { signIn, signUp, requestPasswordReset } from "./actions";
+
+type Mode = "login" | "register" | "forgot";
 
 export function AuthForm({ redirectTo }: { redirectTo?: string }) {
-  const [tab, setTab] = useState<"login" | "register">("login");
+  const [mode, setMode] = useState<Mode>("login");
   const [loginState, loginAction, loginPending] = useActionState(signIn, null);
   const [registerState, registerAction, registerPending] = useActionState(signUp, null);
+  const [resetState, resetAction, resetPending] = useActionState(requestPasswordReset, null);
 
-  const pending = loginPending || registerPending;
+  const pending = loginPending || registerPending || resetPending;
+
+  const subtitle =
+    mode === "login"
+      ? "Melde dich an, um Boxen zu mieten oder anzubieten."
+      : mode === "register"
+        ? "Erstelle ein kostenloses Konto."
+        : "Wir schicken dir einen Link zum Zurücksetzen.";
 
   return (
     <>
@@ -25,43 +35,52 @@ export function AuthForm({ redirectTo }: { redirectTo?: string }) {
           priority
         />
         <h1 className="mt-5 font-display text-3xl font-semibold tracking-tight">
-          Willkommen bei Caprio
+          {mode === "forgot" ? "Passwort vergessen?" : "Willkommen bei Caprio"}
         </h1>
-        <p className="mt-2 text-ink-soft">
-          {tab === "login"
-            ? "Melde dich an, um Boxen zu mieten oder anzubieten."
-            : "Erstelle ein kostenloses Konto."}
-        </p>
+        <p className="mt-2 text-ink-soft">{subtitle}</p>
       </div>
 
-      {/* Tab toggle */}
-      <div className="mt-8 flex rounded-xl border border-line bg-paper/60 p-1">
-        {(["login", "register"] as const).map((t) => (
-          <button
-            key={t}
-            type="button"
-            onClick={() => setTab(t)}
-            className={`flex-1 rounded-lg py-2 text-sm font-medium transition-colors ${
-              tab === t
-                ? "bg-cream text-ink shadow-sm"
-                : "text-ink-soft hover:text-ink"
-            }`}
-          >
-            {t === "login" ? "Anmelden" : "Registrieren"}
-          </button>
-        ))}
-      </div>
+      {/* Tab toggle (hidden in forgot mode) */}
+      {mode !== "forgot" && (
+        <div className="mt-8 flex rounded-xl border border-line bg-paper/60 p-1">
+          {(["login", "register"] as const).map((t) => (
+            <button
+              key={t}
+              type="button"
+              onClick={() => setMode(t)}
+              className={`flex-1 rounded-lg py-2 text-sm font-medium transition-colors ${
+                mode === t
+                  ? "bg-cream text-ink shadow-sm"
+                  : "text-ink-soft hover:text-ink"
+              }`}
+            >
+              {t === "login" ? "Anmelden" : "Registrieren"}
+            </button>
+          ))}
+        </div>
+      )}
 
       <div className="mt-6 rounded-2xl border border-line bg-cream p-6 shadow-[0_18px_50px_-32px_rgba(42,36,33,0.25)]">
-        {tab === "login" ? (
+        {mode === "login" && (
           <form action={loginAction} className="space-y-4">
             {redirectTo && <input type="hidden" name="redirect" value={redirectTo} />}
             <Field label="E-Mail" icon={<Mail size={16} />} name="email" type="email" placeholder="du@beispiel.de" />
             <Field label="Passwort" icon={<Lock size={16} />} name="password" type="password" placeholder="••••••••" />
+            <div className="flex justify-end">
+              <button
+                type="button"
+                onClick={() => setMode("forgot")}
+                className="text-xs font-medium text-clay-600 hover:underline"
+              >
+                Passwort vergessen?
+              </button>
+            </div>
             {loginState?.error && <ErrorBanner message={loginState.error} />}
             <SubmitButton label="Anmelden" pending={pending} />
           </form>
-        ) : (
+        )}
+
+        {mode === "register" && (
           <form action={registerAction} className="space-y-4">
             {redirectTo && <input type="hidden" name="redirect" value={redirectTo} />}
             <div className="grid grid-cols-2 gap-3">
@@ -74,6 +93,23 @@ export function AuthForm({ redirectTo }: { redirectTo?: string }) {
             {registerState?.error && <ErrorBanner message={registerState.error} />}
             {registerState?.message && <SuccessBanner message={registerState.message} />}
             <SubmitButton label="Konto erstellen" pending={pending} />
+          </form>
+        )}
+
+        {mode === "forgot" && (
+          <form action={resetAction} className="space-y-4">
+            <Field label="E-Mail" icon={<Mail size={16} />} name="email" type="email" placeholder="du@beispiel.de" />
+            {resetState?.error && <ErrorBanner message={resetState.error} />}
+            {resetState?.message && <SuccessBanner message={resetState.message} />}
+            <SubmitButton label="Link zum Zurücksetzen senden" pending={pending} />
+            <button
+              type="button"
+              onClick={() => setMode("login")}
+              className="flex w-full items-center justify-center gap-1.5 text-sm font-medium text-ink-soft transition-colors hover:text-ink"
+            >
+              <ArrowLeft size={15} />
+              Zurück zur Anmeldung
+            </button>
           </form>
         )}
       </div>
