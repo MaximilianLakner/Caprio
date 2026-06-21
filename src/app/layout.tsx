@@ -31,7 +31,12 @@ export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   // Read authenticated user; degrades gracefully if Supabase isn't configured yet.
-  let user: { id: string; email: string; name?: string } | null = null;
+  let user: {
+    id: string;
+    email: string;
+    name?: string;
+    avatarUrl?: string | null;
+  } | null = null;
   if (process.env.NEXT_PUBLIC_SUPABASE_URL) {
     try {
       const { createClient } = await import("@/lib/supabase/server");
@@ -40,12 +45,18 @@ export default async function RootLayout({
         data: { user: u },
       } = await supabase.auth.getUser();
       if (u) {
+        // select("*") is resilient: works whether or not avatar_url exists yet
         const { data: profile } = await supabase
           .from("profiles")
-          .select("name")
+          .select("*")
           .eq("id", u.id)
           .single();
-        user = { id: u.id, email: u.email!, name: profile?.name };
+        user = {
+          id: u.id,
+          email: u.email!,
+          name: profile?.name,
+          avatarUrl: profile?.avatar_url ?? null,
+        };
       }
     } catch {}
   }

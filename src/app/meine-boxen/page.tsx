@@ -3,6 +3,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Plus, MapPin, ToggleLeft, ToggleRight, Trash2, LogOut } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
+import { RoofboxVisual } from "@/components/roofbox-visual";
 import { signOut } from "@/lib/actions/auth";
 import { deleteListing, toggleAvailability } from "./actions";
 
@@ -70,35 +71,54 @@ export default async function MeineBoxenPage() {
           {listings.map((listing) => (
             <div
               key={listing.id}
-              className="rounded-2xl border border-line bg-cream p-5"
+              className="overflow-hidden rounded-2xl border border-line bg-cream"
             >
-              <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <h3 className="truncate font-display text-lg font-semibold">
-                    {listing.title}
-                  </h3>
-                  <p className="mt-1 flex items-center gap-1 text-sm text-ink-soft">
-                    <MapPin size={13} />
-                    {listing.city}
-                  </p>
+              <Link
+                href={`/dachboxen/${listing.id}`}
+                className="block aspect-[4/3] overflow-hidden bg-paper"
+              >
+                {listing.images?.[0] ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={listing.images[0]}
+                    alt={listing.title}
+                    className="h-full w-full object-cover transition-transform duration-300 hover:scale-[1.03]"
+                  />
+                ) : (
+                  <RoofboxVisual tone={0} className="h-full w-full" />
+                )}
+              </Link>
+
+              <div className="p-5">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <Link href={`/dachboxen/${listing.id}`} className="min-w-0">
+                      <h3 className="truncate font-display text-lg font-semibold transition-colors hover:text-clay-600">
+                        {listing.title}
+                      </h3>
+                    </Link>
+                    <p className="mt-1 flex items-center gap-1 text-sm text-ink-soft">
+                      <MapPin size={13} />
+                      {listing.city}
+                    </p>
+                  </div>
+                  <span
+                    className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-medium ${
+                      listing.is_available
+                        ? "bg-blush-100 text-clay-600"
+                        : "bg-paper text-taupe-500"
+                    }`}
+                  >
+                    {listing.is_available ? "Aktiv" : "Pausiert"}
+                  </span>
                 </div>
-                <span
-                  className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-medium ${
-                    listing.is_available
-                      ? "bg-blush-100 text-clay-600"
-                      : "bg-paper text-taupe-500"
-                  }`}
-                >
-                  {listing.is_available ? "Aktiv" : "Pausiert"}
-                </span>
-              </div>
 
-              <p className="mt-3 font-display text-2xl font-semibold">
-                {listing.price_per_day} €
-                <span className="text-base font-normal text-ink-soft"> / Tag</span>
-              </p>
+                <p className="mt-3 font-display text-2xl font-semibold">
+                  {listing.price_per_day} €
+                  <span className="text-base font-normal text-ink-soft"> / Tag</span>
+                </p>
 
-              <div className="mt-4 flex items-center justify-between border-t border-line pt-4">
+                <div className="mt-4 flex items-center justify-between border-t border-line pt-4">
                 {/* Toggle availability */}
                 <form
                   action={toggleAvailability.bind(
@@ -130,6 +150,7 @@ export default async function MeineBoxenPage() {
                     Löschen
                   </button>
                 </form>
+                </div>
               </div>
             </div>
           ))}

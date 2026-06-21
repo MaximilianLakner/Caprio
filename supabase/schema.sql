@@ -7,8 +7,12 @@
 create table if not exists public.profiles (
   id         uuid primary key references auth.users on delete cascade,
   name       text not null,
+  avatar_url text,
   created_at timestamptz default now()
 );
+
+-- For databases created before avatar_url existed:
+alter table public.profiles add column if not exists avatar_url text;
 
 alter table public.profiles enable row level security;
 
@@ -70,3 +74,59 @@ create policy "Users can update their own listings"
 
 create policy "Users can delete their own listings"
   on public.dachboxen for delete using (auth.uid() = host_id);
+
+-- ============================================================
+-- 3. Profile pictures — storage bucket "avatars" (public read)
+-- ============================================================
+insert into storage.buckets (id, name, public)
+values ('avatars', 'avatars', true)
+on conflict (id) do nothing;
+
+drop policy if exists "Avatar images are publicly readable" on storage.objects;
+create policy "Avatar images are publicly readable"
+  on storage.objects for select using (bucket_id = 'avatars');
+
+drop policy if exists "Users can upload their own avatar" on storage.objects;
+create policy "Users can upload their own avatar"
+  on storage.objects for insert
+  with check (
+    bucket_id = 'avatars'
+    and (storage.foldername(name))[1] = auth.uid()::text
+  );
+
+drop policy if exists "Users can update their own avatar" on storage.objects;
+create policy "Users can update their own avatar"
+  on storage.objects for update
+  using (
+    bucket_id = 'avatars'
+    and (storage.foldername(name))[1] = auth.uid()::text
+  );
+
+-- ============================================================
+-- 4. Box photos — images column + storage bucket "box-images"
+-- ============================================================
+alter table public.dachboxen add column if not exists images text[] default '{}';
+
+insert into storage.buckets (id, name, public)
+values ('box-images', 'box-images', true)
+on conflict (id) do nothing;
+
+drop policy if exists "Box images are publicly readable" on storage.objects;
+create policy "Box images are publicly readable"
+  on storage.objects for select using (bucket_id = 'box-images');
+
+drop policy if exists "Users can upload their own box images" on storage.objects;
+create policy "Users can upload their own box images"
+  on storage.objects for insert
+  with check (
+    bucket_id = 'box-images'
+    and (storage.foldername(name))[1] = auth.uid()::text
+  );
+
+drop policy if exists "Users can delete their own box images" on storage.objects;
+create policy "Users can delete their own box images"
+  on storage.objects for delete
+  using (
+    bucket_id = 'box-images'
+    and (storage.foldername(name))[1] = auth.uid()::text
+  );

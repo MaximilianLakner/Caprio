@@ -48,14 +48,17 @@ export async function signUp(
   prevState: AuthState,
   formData: FormData
 ): Promise<AuthState> {
-  const name = (formData.get("name") as string)?.trim();
+  const firstName = (formData.get("firstName") as string)?.trim();
+  const lastName = (formData.get("lastName") as string)?.trim();
   const email = (formData.get("email") as string)?.trim();
   const password = formData.get("password") as string;
   const passwordConfirm = formData.get("passwordConfirm") as string;
   const redirectTo = (formData.get("redirect") as string) || "/meine-boxen";
 
   // Validation
-  if (!name) return { error: "Bitte gib deinen Namen ein." };
+  if (!firstName) return { error: "Bitte gib deinen Vornamen ein." };
+  if (!lastName) return { error: "Bitte gib deinen Nachnamen ein." };
+  const name = `${firstName} ${lastName}`;
   if (!email) return { error: "Bitte gib eine E-Mail-Adresse ein." };
   if (!password || password.length < 6)
     return { error: "Das Passwort muss mindestens 6 Zeichen lang sein." };

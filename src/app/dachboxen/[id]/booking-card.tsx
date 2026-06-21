@@ -19,8 +19,8 @@ export function BookingCard({
   reviews,
 }: {
   pricePerDay: number;
-  rating: number;
-  reviews: number;
+  rating?: number | null;
+  reviews?: number | null;
 }) {
   const today = new Date().toISOString().slice(0, 10);
   const [from, setFrom] = useState("");
@@ -38,11 +38,17 @@ export function BookingCard({
           <span className="font-display text-3xl font-semibold">{pricePerDay} €</span>
           <span className="text-ink-soft"> / Tag</span>
         </p>
-        <span className="flex items-center gap-1 text-sm">
-          <Star size={14} className="fill-clay-500 text-clay-500" />
-          <span className="font-medium">{rating.toFixed(2)}</span>
-          <span className="text-ink-soft">· {reviews}</span>
-        </span>
+        {reviews && reviews > 0 ? (
+          <span className="flex items-center gap-1 text-sm">
+            <Star size={14} className="fill-clay-500 text-clay-500" />
+            <span className="font-medium">{rating?.toFixed(2)}</span>
+            <span className="text-ink-soft">· {reviews}</span>
+          </span>
+        ) : (
+          <span className="rounded-full bg-blush-100 px-2.5 py-1 text-xs font-semibold text-clay-600">
+            Neu
+          </span>
+        )}
       </div>
 
       <div className="mt-5 grid grid-cols-2 overflow-hidden rounded-2xl border border-line">

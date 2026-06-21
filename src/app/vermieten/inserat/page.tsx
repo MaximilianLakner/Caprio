@@ -17,8 +17,8 @@ export default async function InseratPage() {
   if (!user) redirect("/anmelden?redirect=/vermieten/inserat");
 
   return (
-    <div className="mx-auto max-w-2xl px-3 py-14 sm:px-8">
-      <div className="mb-10">
+    <div className="mx-auto max-w-3xl px-3 py-14 sm:px-8">
+      <div className="mb-8">
         <p className="text-sm font-medium uppercase tracking-wider text-taupe-700">
           Box vermieten
         </p>
@@ -30,9 +30,7 @@ export default async function InseratPage() {
         </p>
       </div>
 
-      <div className="rounded-2xl border border-line bg-cream p-6 sm:p-8">
-        <InseratForm />
-      </div>
+      <InseratForm />
     </div>
   );
 }

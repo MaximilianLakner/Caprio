@@ -64,7 +64,10 @@ export function AuthForm({ redirectTo }: { redirectTo?: string }) {
         ) : (
           <form action={registerAction} className="space-y-4">
             {redirectTo && <input type="hidden" name="redirect" value={redirectTo} />}
-            <Field label="Dein Name" icon={<User size={16} />} name="name" type="text" placeholder="Max Mustermann" />
+            <div className="grid grid-cols-2 gap-3">
+              <Field label="Vorname" icon={<User size={16} />} name="firstName" type="text" placeholder="Max" />
+              <Field label="Nachname" icon={<User size={16} />} name="lastName" type="text" placeholder="Mustermann" />
+            </div>
             <Field label="E-Mail" icon={<Mail size={16} />} name="email" type="email" placeholder="du@beispiel.de" />
             <Field label="Passwort" icon={<Lock size={16} />} name="password" type="password" placeholder="mindestens 6 Zeichen" minLength={6} />
             <Field label="Passwort bestätigen" icon={<Lock size={16} />} name="passwordConfirm" type="password" placeholder="Passwort wiederholen" minLength={6} />

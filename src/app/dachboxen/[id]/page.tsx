@@ -13,11 +13,91 @@ import {
   Check,
 } from "lucide-react";
 import { RoofboxVisual } from "@/components/roofbox-visual";
+import { ImageCarousel } from "@/components/image-carousel";
 import { BookingCard } from "./booking-card";
 import { DACHBOXEN, getBox, sizeOf, SIZE_LABEL } from "@/lib/data";
+import { createClient } from "@/lib/supabase/server";
 
 export function generateStaticParams() {
   return DACHBOXEN.map((b) => ({ id: b.id }));
+}
+
+type ViewBox = {
+  title: string;
+  brand: string;
+  city: string;
+  pricePerDay: number;
+  volume: number;
+  lengthCm: number;
+  maxLoadKg: number;
+  opening: string;
+  description: string;
+  features: string[];
+  images: string[];
+  host: string;
+  rating: number | null;
+  reviews: number | null;
+  superhost: boolean;
+  hostSince: number | null;
+  tone: number;
+};
+
+/** Resolve a box from mock data (slug ids) or Supabase (uuid ids). */
+async function resolveBox(id: string): Promise<ViewBox | null> {
+  const mock = getBox(id);
+  if (mock) {
+    return {
+      title: mock.title,
+      brand: mock.brand,
+      city: mock.city,
+      pricePerDay: mock.pricePerDay,
+      volume: mock.volume,
+      lengthCm: mock.lengthCm,
+      maxLoadKg: mock.maxLoadKg,
+      opening: mock.opening,
+      description: mock.description,
+      features: mock.features,
+      images: [],
+      host: mock.host,
+      rating: mock.rating,
+      reviews: mock.reviews,
+      superhost: mock.superhost,
+      hostSince: mock.hostSince,
+      tone: mock.tone,
+    };
+  }
+
+  // Not a mock id → try Supabase
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from("dachboxen")
+      .select("*, profiles(name)")
+      .eq("id", id)
+      .single();
+    if (!data) return null;
+    return {
+      title: data.title,
+      brand: data.brand,
+      city: data.city,
+      pricePerDay: Number(data.price_per_day),
+      volume: data.volume,
+      lengthCm: data.length_cm,
+      maxLoadKg: data.max_load_kg,
+      opening: data.opening,
+      description: data.description ?? "",
+      features: data.features ?? [],
+      images: data.images ?? [],
+      host: data.profiles?.name ?? "Vermieter:in",
+      rating: null,
+      reviews: null,
+      superhost: false,
+      hostSince: null,
+      tone: 0,
+    };
+  } catch {
+    return null;
+  }
 }
 
 export async function generateMetadata({
@@ -26,12 +106,9 @@ export async function generateMetadata({
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {
   const { id } = await params;
-  const box = getBox(id);
+  const box = await resolveBox(id);
   if (!box) return { title: "Box nicht gefunden" };
-  return {
-    title: `${box.title} in ${box.city}`,
-    description: box.description,
-  };
+  return { title: `${box.title} in ${box.city}`, description: box.description };
 }
 
 export default async function BoxDetailPage({
@@ -40,7 +117,7 @@ export default async function BoxDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const box = getBox(id);
+  const box = await resolveBox(id);
   if (!box) notFound();
 
   const specs = [
@@ -63,9 +140,13 @@ export default async function BoxDetailPage({
       <div className="mt-6 grid gap-12 lg:grid-cols-[1.5fr_1fr]">
         {/* main */}
         <div>
-          <div className="overflow-hidden rounded-[2rem] border border-line">
-            <RoofboxVisual tone={box.tone} className="aspect-[16/10] w-full" />
-          </div>
+          {box.images.length > 0 ? (
+            <ImageCarousel images={box.images} alt={box.title} />
+          ) : (
+            <div className="overflow-hidden rounded-[2rem] border border-line">
+              <RoofboxVisual tone={box.tone} className="aspect-[16/10] w-full" />
+            </div>
+          )}
 
           <div className="mt-8">
             <div className="flex flex-wrap items-center gap-3">
@@ -89,11 +170,15 @@ export default async function BoxDetailPage({
                 <MapPin size={15} className="text-taupe-500" />
                 {box.city}
               </span>
-              <span className="inline-flex items-center gap-1.5">
-                <Star size={15} className="fill-clay-500 text-clay-500" />
-                <span className="font-medium text-ink">{box.rating.toFixed(2)}</span>
-                ({box.reviews} Bewertungen)
-              </span>
+              {box.reviews && box.reviews > 0 ? (
+                <span className="inline-flex items-center gap-1.5">
+                  <Star size={15} className="fill-clay-500 text-clay-500" />
+                  <span className="font-medium text-ink">{box.rating?.toFixed(2)}</span>
+                  ({box.reviews} Bewertungen)
+                </span>
+              ) : (
+                <span className="font-medium text-clay-600">Neu auf Caprio</span>
+              )}
               <span>{SIZE_LABEL[sizeOf(box.volume)]}</span>
             </div>
           </div>
@@ -115,23 +200,29 @@ export default async function BoxDetailPage({
           </div>
 
           {/* description */}
-          <div className="mt-10 border-t border-line pt-8">
-            <h2 className="font-display text-2xl font-semibold tracking-tight">
-              Über diese Box
-            </h2>
-            <p className="mt-4 leading-relaxed text-ink-soft">{box.description}</p>
+          {(box.description || box.features.length > 0) && (
+            <div className="mt-10 border-t border-line pt-8">
+              <h2 className="font-display text-2xl font-semibold tracking-tight">
+                Über diese Box
+              </h2>
+              {box.description && (
+                <p className="mt-4 leading-relaxed text-ink-soft">{box.description}</p>
+              )}
 
-            <ul className="mt-6 grid gap-3 sm:grid-cols-2">
-              {box.features.map((f) => (
-                <li key={f} className="flex items-center gap-2.5 text-sm">
-                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blush-100">
-                    <Check size={12} className="text-clay-600" />
-                  </span>
-                  {f}
-                </li>
-              ))}
-            </ul>
-          </div>
+              {box.features.length > 0 && (
+                <ul className="mt-6 grid gap-3 sm:grid-cols-2">
+                  {box.features.map((f) => (
+                    <li key={f} className="flex items-center gap-2.5 text-sm">
+                      <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blush-100">
+                        <Check size={12} className="text-clay-600" />
+                      </span>
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          )}
 
           {/* host */}
           <div className="mt-10 flex items-center gap-4 rounded-3xl border border-line bg-paper/40 p-6">
@@ -148,7 +239,9 @@ export default async function BoxDetailPage({
                 )}
               </p>
               <p className="text-sm text-ink-soft">
-                Mitglied seit {box.hostSince} · {box.reviews} abgeschlossene Vermietungen
+                {box.hostSince
+                  ? `Mitglied seit ${box.hostSince} · ${box.reviews} abgeschlossene Vermietungen`
+                  : "Neues Mitglied bei Caprio"}
               </p>
             </div>
           </div>
@@ -157,7 +250,11 @@ export default async function BoxDetailPage({
         {/* booking sidebar */}
         <div>
           <div className="sticky top-24">
-            <BookingCard pricePerDay={box.pricePerDay} rating={box.rating} reviews={box.reviews} />
+            <BookingCard
+              pricePerDay={box.pricePerDay}
+              rating={box.rating}
+              reviews={box.reviews}
+            />
           </div>
         </div>
       </div>
