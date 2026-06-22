@@ -137,3 +137,80 @@ create policy "Users can delete their own box images"
     bucket_id = 'box-images'
     and (storage.foldername(name))[1] = auth.uid()::text
   );
+
+-- ============================================================
+-- 5. Bookings + Stripe Connect (Zahlungen)
+-- ============================================================
+
+-- needed so a uuid (=) and a range (&&) can live in the same GiST index
+create extension if not exists btree_gist;
+
+-- Connected Stripe account of a host (for payouts)
+alter table public.profiles add column if not exists stripe_account_id text;
+
+create table if not exists public.bookings (
+  id                   uuid default gen_random_uuid() primary key,
+  box_id               uuid not null references public.dachboxen (id) on delete cascade,
+  renter_id            uuid not null references public.profiles (id) on delete cascade,
+  host_id              uuid not null references public.profiles (id) on delete cascade,
+  start_date           date not null,
+  end_date             date not null,
+  -- inclusive range [start, end]; used by the no-overlap constraint
+  during               daterange generated always as (daterange(start_date, end_date, '[]')) stored,
+  status               text not null default 'pending'
+                         check (status in ('pending','paid','handover_confirmed','completed','cancelled','refunded','expired')),
+  amount_total         integer not null,        -- cents the renter pays
+  marketplace_fee      integer not null default 0, -- cents Caprio keeps
+  host_payout          integer,                 -- cents transferred to host (after handover)
+  currency             text not null default 'eur',
+  stripe_session_id    text,
+  stripe_payment_intent text,
+  stripe_transfer_id   text,
+  expires_at           timestamptz,             -- pending holds expire
+  created_at           timestamptz default now(),
+  constraint valid_dates check (end_date >= start_date)
+);
+
+-- 🔒 Race-proof: the DB itself rejects any overlapping *active* booking for a box
+alter table public.bookings drop constraint if exists no_overlapping_bookings;
+alter table public.bookings add constraint no_overlapping_bookings
+  exclude using gist (box_id with =, during with &&)
+  where (status in ('pending','paid','handover_confirmed','completed'));
+
+alter table public.bookings enable row level security;
+
+drop policy if exists "Participants can view their bookings" on public.bookings;
+create policy "Participants can view their bookings"
+  on public.bookings for select
+  using (auth.uid() = renter_id or auth.uid() = host_id);
+
+drop policy if exists "Renters can create their own bookings" on public.bookings;
+create policy "Renters can create their own bookings"
+  on public.bookings for insert
+  with check (auth.uid() = renter_id);
+
+drop policy if exists "Participants can update their bookings" on public.bookings;
+create policy "Participants can update their bookings"
+  on public.bookings for update
+  using (auth.uid() = renter_id or auth.uid() = host_id);
+
+-- Booked date ranges for a box (no personal data) — feeds the calendar
+create or replace function public.box_booked_ranges(p_box_id uuid)
+returns table(start_date date, end_date date)
+language sql security definer set search_path = public stable as $$
+  select start_date, end_date
+  from public.bookings
+  where box_id = p_box_id
+    and status in ('pending','paid','handover_confirmed','completed')
+    and end_date >= current_date;
+$$;
+grant execute on function public.box_booked_ranges(uuid) to anon, authenticated;
+
+-- Release abandoned pending holds so they stop blocking dates
+create or replace function public.expire_stale_bookings()
+returns void
+language sql security definer set search_path = public as $$
+  update public.bookings set status = 'expired'
+  where status = 'pending' and expires_at is not null and expires_at < now();
+$$;
+grant execute on function public.expire_stale_bookings() to anon, authenticated;

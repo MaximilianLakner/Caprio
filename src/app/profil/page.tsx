@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Package, ArrowRight } from "lucide-react";
+import { Package, ArrowRight, Banknote, CheckCircle2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
+import { getPayoutStatus } from "@/lib/stripe/account-status";
+import { startHostOnboarding } from "@/lib/actions/connect";
 import { ProfileForm } from "./profile-form";
 
 export const metadata: Metadata = {
@@ -30,6 +32,10 @@ export default async function ProfilPage() {
   const lastName = rest.join(" ");
   const boxCount = count ?? 0;
 
+  const payout = process.env.STRIPE_SECRET_KEY
+    ? await getPayoutStatus(profile?.stripe_account_id)
+    : { hasAccount: false, payoutsEnabled: false, detailsSubmitted: false };
+
   return (
     <div className="mx-auto max-w-2xl px-3 py-14 sm:px-8">
       <div className="mb-10">
@@ -52,6 +58,44 @@ export default async function ProfilPage() {
           email={user.email!}
           avatarUrl={profile?.avatar_url ?? null}
         />
+      </div>
+
+      {/* Payouts / Stripe Connect */}
+      <div className="mt-6 rounded-2xl border border-line bg-cream p-6">
+        <div className="flex items-start gap-3">
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blush-100">
+            <Banknote size={18} className="text-clay-600" />
+          </span>
+          <div className="flex-1">
+            <div className="flex items-center gap-2">
+              <p className="font-semibold text-ink">Auszahlungen</p>
+              {payout.payoutsEnabled && (
+                <span className="inline-flex items-center gap-1 rounded-full bg-blush-100 px-2 py-0.5 text-xs font-semibold text-clay-600">
+                  <CheckCircle2 size={12} />
+                  Aktiv
+                </span>
+              )}
+            </div>
+            <p className="mt-1 text-sm leading-relaxed text-ink-soft">
+              {payout.payoutsEnabled
+                ? "Du kannst Boxen vermieten und Auszahlungen empfangen. Das Geld erhältst du nach bestätigter Übergabe."
+                : payout.hasAccount
+                  ? "Dein Stripe-Onboarding ist noch nicht abgeschlossen. Schließ es ab, um Auszahlungen zu empfangen."
+                  : "Richte Auszahlungen über Stripe ein, damit du deine Box vermieten und Geld empfangen kannst."}
+            </p>
+
+            {!payout.payoutsEnabled && (
+              <form action={startHostOnboarding} className="mt-4">
+                <button
+                  type="submit"
+                  className="inline-flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 text-sm font-semibold text-cream transition-transform hover:-translate-y-px"
+                >
+                  {payout.hasAccount ? "Onboarding fortsetzen" : "Auszahlungen einrichten"}
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
       </div>
 
       {/* Uploaded boxes shortcut */}

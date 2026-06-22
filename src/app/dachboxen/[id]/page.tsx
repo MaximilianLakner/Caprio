@@ -17,6 +17,7 @@ import { ImageCarousel } from "@/components/image-carousel";
 import { BookingCard } from "./booking-card";
 import { DACHBOXEN, getBox, sizeOf, SIZE_LABEL } from "@/lib/data";
 import { createClient } from "@/lib/supabase/server";
+import { getPayoutStatus } from "@/lib/stripe/account-status";
 
 export function generateStaticParams() {
   return DACHBOXEN.map((b) => ({ id: b.id }));
@@ -40,6 +41,8 @@ type ViewBox = {
   superhost: boolean;
   hostSince: number | null;
   tone: number;
+  isReal: boolean;
+  hostId: string | null;
 };
 
 /** Resolve a box from mock data (slug ids) or Supabase (uuid ids). */
@@ -64,6 +67,8 @@ async function resolveBox(id: string): Promise<ViewBox | null> {
       superhost: mock.superhost,
       hostSince: mock.hostSince,
       tone: mock.tone,
+      isReal: false,
+      hostId: null,
     };
   }
 
@@ -94,6 +99,8 @@ async function resolveBox(id: string): Promise<ViewBox | null> {
       superhost: false,
       hostSince: null,
       tone: 0,
+      isReal: true,
+      hostId: data.host_id,
     };
   } catch {
     return null;
@@ -119,6 +126,22 @@ export default async function BoxDetailPage({
   const { id } = await params;
   const box = await resolveBox(id);
   if (!box) notFound();
+
+  // Bookability + already-booked dates (only for real Supabase boxes)
+  let bookable = false;
+  let bookedRanges: { start_date: string; end_date: string }[] = [];
+  if (box.isReal && box.hostId) {
+    const supabase = await createClient();
+    const [{ data: hostProfile }, { data: ranges }] = await Promise.all([
+      supabase.from("profiles").select("stripe_account_id").eq("id", box.hostId).single(),
+      supabase.rpc("box_booked_ranges", { p_box_id: id }),
+    ]);
+    bookedRanges = ranges ?? [];
+    if (process.env.STRIPE_SECRET_KEY) {
+      const payout = await getPayoutStatus(hostProfile?.stripe_account_id);
+      bookable = payout.payoutsEnabled;
+    }
+  }
 
   const specs = [
     { icon: BoxIcon, label: "Volumen", value: `${box.volume} L · Größe ${sizeOf(box.volume)}` },
@@ -251,9 +274,12 @@ export default async function BoxDetailPage({
         <div>
           <div className="sticky top-24">
             <BookingCard
+              boxId={id}
               pricePerDay={box.pricePerDay}
               rating={box.rating}
               reviews={box.reviews}
+              bookable={bookable}
+              bookedRanges={bookedRanges}
             />
           </div>
         </div>
