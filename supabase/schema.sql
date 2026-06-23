@@ -214,3 +214,8 @@ language sql security definer set search_path = public as $$
   where status = 'pending' and expires_at is not null and expires_at < now();
 $$;
 grant execute on function public.expire_stale_bookings() to anon, authenticated;
+
+-- ============================================================
+-- 6. Befestigungsart (mounting type) auf Inseraten
+-- ============================================================
+alter table public.dachboxen add column if not exists mounting text;

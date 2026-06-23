@@ -9,6 +9,7 @@ import {
   Ruler,
   Weight,
   DoorOpen,
+  Wrench,
   ShieldCheck,
   Check,
 } from "lucide-react";
@@ -28,6 +29,7 @@ type ViewBox = {
   lengthCm: number;
   maxLoadKg: number;
   opening: string;
+  mounting: string | null;
   description: string;
   features: string[];
   images: string[];
@@ -60,6 +62,7 @@ async function resolveBox(id: string): Promise<ViewBox | null> {
       lengthCm: box.lengthCm,
       maxLoadKg: box.maxLoadKg,
       opening: box.opening,
+      mounting: box.mounting,
       description: box.description,
       features: box.features,
       images: box.images,
@@ -190,6 +193,15 @@ export default async function BoxDetailPage({
               </div>
             ))}
           </div>
+
+          {/* mounting */}
+          {box.mounting && (
+            <div className="mt-4 flex items-center gap-2.5 rounded-2xl border border-line bg-paper/40 p-4 text-sm">
+              <Wrench size={18} className="shrink-0 text-clay-600" />
+              <span className="text-taupe-700">Befestigungsart:</span>
+              <span className="font-medium">{box.mounting}</span>
+            </div>
+          )}
 
           {/* description */}
           {(box.description || box.features.length > 0) && (

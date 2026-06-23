@@ -24,8 +24,9 @@ export async function createListing(
   const brand = (formData.get("brand") as string)?.trim();
   const city = (formData.get("city") as string)?.trim();
   const opening = formData.get("opening") as string;
-  if (!title || !brand || !city || !opening)
-    return { error: "Bitte fülle alle Pflichtfelder aus." };
+  const mounting = (formData.get("mounting") as string)?.trim();
+  if (!title || !brand || !city || !opening || !mounting)
+    return { error: "Bitte fülle alle Pflichtfelder aus (inkl. Befestigungsart)." };
 
   const features = ((formData.get("features") as string) || "")
     .split(",")
@@ -77,6 +78,7 @@ export async function createListing(
     length_cm: Number(formData.get("length_cm")),
     max_load_kg: Number(formData.get("max_load_kg")),
     opening,
+    mounting,
     description: (formData.get("description") as string) || "",
     features,
     images: imageUrls,

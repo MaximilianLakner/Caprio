@@ -11,6 +11,7 @@ export type BoxListing = {
   lengthCm: number;
   maxLoadKg: number;
   opening: string;
+  mounting: string | null;
   description: string;
   features: string[];
   images: string[];
@@ -31,6 +32,7 @@ export function mapBoxRow(row: any): BoxListing {
     lengthCm: row.length_cm,
     maxLoadKg: row.max_load_kg,
     opening: row.opening,
+    mounting: row.mounting ?? null,
     description: row.description ?? "",
     features: row.features ?? [],
     images: row.images ?? [],

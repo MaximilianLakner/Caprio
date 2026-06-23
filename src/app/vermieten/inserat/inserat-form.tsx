@@ -5,12 +5,21 @@ import { Loader2, Info, ImagePlus, X, Star } from "lucide-react";
 import { createListing } from "./actions";
 
 const BRANDS = ["Thule", "Kamei", "Hapro", "Yakima", "Atera", "Jetbag", "Andere"];
+const MOUNTINGS = [
+  "Schnellbefestigung (Schnellspanner)",
+  "U-Bügel",
+  "Klemmbefestigung",
+  "T-Nut / Nutenstein-Adapter",
+  "Krallenbefestigung",
+  "Anderes",
+];
 const MIN_IMAGES = 4;
 const MAX_IMAGES = 7;
 
 export function InseratForm() {
   const [state, formAction, pending] = useActionState(createListing, null);
   const [files, setFiles] = useState<File[]>([]);
+  const [mounting, setMounting] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
 
   // object URLs for previews, cleaned up when the set changes
@@ -171,6 +180,37 @@ export function InseratForm() {
               </label>
             ))}
           </div>
+        </Field>
+        <Field
+          label="Befestigungsart"
+          hint="Wie wird die Box auf dem Dachträger befestigt?"
+        >
+          <select
+            value={mounting}
+            onChange={(e) => setMounting(e.target.value)}
+            required
+            className="w-full rounded-lg border border-line bg-cream px-3 py-2.5 text-sm outline-none transition-colors focus:border-clay-500"
+          >
+            <option value="" disabled>
+              Befestigung wählen …
+            </option>
+            {MOUNTINGS.map((m) => (
+              <option key={m} value={m}>
+                {m}
+              </option>
+            ))}
+          </select>
+          {mounting === "Anderes" ? (
+            <input
+              name="mounting"
+              type="text"
+              required
+              placeholder="Welche Befestigung?"
+              className="mt-2 w-full rounded-lg border border-line bg-cream px-3 py-2.5 text-sm outline-none transition-colors focus:border-clay-500"
+            />
+          ) : (
+            <input type="hidden" name="mounting" value={mounting} />
+          )}
         </Field>
         <Field
           label="Besonderheiten"
