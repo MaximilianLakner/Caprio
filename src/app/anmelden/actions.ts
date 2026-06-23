@@ -94,6 +94,25 @@ export async function signUp(
   redirect(redirectTo);
 }
 
+export async function signInWithProvider(formData: FormData) {
+  const provider = formData.get("provider") as "google" | "apple" | "github";
+  const next = (formData.get("next") as string) || "/meine-boxen";
+
+  const supabase = await createClient();
+  const redirectTo = await originUrl(
+    `/auth/callback?next=${encodeURIComponent(next)}`
+  );
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider,
+    options: { redirectTo },
+  });
+
+  if (error || !data.url) {
+    redirect("/anmelden?error=oauth");
+  }
+  redirect(data.url);
+}
+
 export async function requestPasswordReset(
   prevState: AuthState,
   formData: FormData

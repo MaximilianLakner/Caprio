@@ -1,40 +1,47 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import { Search, SlidersHorizontal, X } from "lucide-react";
 import { BoxCard } from "@/components/box-card";
-import {
-  ALL_BRANDS,
-  DACHBOXEN,
-  SIZE_LABEL,
-  sizeOf,
-  matchesLocation,
-  type SizeCategory,
-} from "@/lib/data";
+import { SIZE_LABEL, sizeOf, matchesCity, type BoxListing, type SizeCategory } from "@/lib/data";
 
-type SortKey = "empfohlen" | "preis-auf" | "preis-ab" | "bewertung";
+type SortKey = "empfohlen" | "preis-auf" | "preis-ab";
 
 const SIZES: SizeCategory[] = ["S", "M", "L"];
-const PRICE_MAX = 20;
 
 const SORT_OPTIONS: { value: SortKey; label: string }[] = [
-  { value: "empfohlen", label: "Empfohlen" },
+  { value: "empfohlen", label: "Neueste zuerst" },
   { value: "preis-auf", label: "Preis: niedrig → hoch" },
   { value: "preis-ab", label: "Preis: hoch → niedrig" },
-  { value: "bewertung", label: "Beste Bewertung" },
 ];
 
-export function BrowseClient({ initialOrt }: { initialOrt: string }) {
+export function BrowseClient({
+  initialOrt,
+  boxes,
+}: {
+  initialOrt: string;
+  boxes: BoxListing[];
+}) {
+  const priceCap = useMemo(
+    () => Math.max(20, ...boxes.map((b) => Math.ceil(b.pricePerDay))),
+    [boxes]
+  );
+  const allBrands = useMemo(
+    () => Array.from(new Set(boxes.map((b) => b.brand))).sort(),
+    [boxes]
+  );
+
   const [ort, setOrt] = useState(initialOrt);
   const [sizes, setSizes] = useState<SizeCategory[]>([]);
   const [brands, setBrands] = useState<string[]>([]);
-  const [maxPrice, setMaxPrice] = useState(PRICE_MAX);
+  const [maxPrice, setMaxPrice] = useState(priceCap);
   const [sort, setSort] = useState<SortKey>("empfohlen");
   const [filtersOpen, setFiltersOpen] = useState(false);
 
   const results = useMemo(() => {
-    const filtered = DACHBOXEN.filter((b) => {
-      if (!matchesLocation(b, ort)) return false;
+    const filtered = boxes.filter((b) => {
+      if (!matchesCity(b.city, ort)) return false;
       if (sizes.length && !sizes.includes(sizeOf(b.volume))) return false;
       if (brands.length && !brands.includes(b.brand)) return false;
       if (b.pricePerDay > maxPrice) return false;
@@ -42,26 +49,13 @@ export function BrowseClient({ initialOrt }: { initialOrt: string }) {
     });
 
     const sorted = [...filtered];
-    switch (sort) {
-      case "preis-auf":
-        sorted.sort((a, b) => a.pricePerDay - b.pricePerDay);
-        break;
-      case "preis-ab":
-        sorted.sort((a, b) => b.pricePerDay - a.pricePerDay);
-        break;
-      case "bewertung":
-        sorted.sort((a, b) => b.rating - a.rating);
-        break;
-      default:
-        sorted.sort(
-          (a, b) => Number(b.superhost) - Number(a.superhost) || b.reviews - a.reviews
-        );
-    }
+    if (sort === "preis-auf") sorted.sort((a, b) => a.pricePerDay - b.pricePerDay);
+    else if (sort === "preis-ab") sorted.sort((a, b) => b.pricePerDay - a.pricePerDay);
     return sorted;
-  }, [ort, sizes, brands, maxPrice, sort]);
+  }, [boxes, ort, sizes, brands, maxPrice, sort]);
 
   const activeCount =
-    sizes.length + brands.length + (maxPrice < PRICE_MAX ? 1 : 0) + (ort ? 1 : 0);
+    sizes.length + brands.length + (maxPrice < priceCap ? 1 : 0) + (ort ? 1 : 0);
 
   function toggle<T>(list: T[], value: T, set: (v: T[]) => void) {
     set(list.includes(value) ? list.filter((x) => x !== value) : [...list, value]);
@@ -71,7 +65,7 @@ export function BrowseClient({ initialOrt }: { initialOrt: string }) {
     setOrt("");
     setSizes([]);
     setBrands([]);
-    setMaxPrice(PRICE_MAX);
+    setMaxPrice(priceCap);
     setSort("empfohlen");
   }
 
@@ -129,13 +123,13 @@ export function BrowseClient({ initialOrt }: { initialOrt: string }) {
             Preis pro Tag
           </span>
           <span className="text-sm font-medium">
-            {maxPrice >= PRICE_MAX ? "alle" : `bis ${maxPrice} €`}
+            {maxPrice >= priceCap ? "alle" : `bis ${maxPrice} €`}
           </span>
         </div>
         <input
           type="range"
           min={5}
-          max={PRICE_MAX}
+          max={priceCap}
           step={1}
           value={maxPrice}
           onChange={(e) => setMaxPrice(Number(e.target.value))}
@@ -143,35 +137,37 @@ export function BrowseClient({ initialOrt }: { initialOrt: string }) {
         />
         <div className="mt-1 flex justify-between text-xs text-ink-soft">
           <span>5 €</span>
-          <span>{PRICE_MAX}+ €</span>
+          <span>{priceCap}+ €</span>
         </div>
       </div>
 
       {/* Marke */}
-      <div>
-        <span className="text-xs font-semibold uppercase tracking-wider text-taupe-700">
-          Marke
-        </span>
-        <div className="mt-3 flex flex-wrap gap-2">
-          {ALL_BRANDS.map((brand) => {
-            const on = brands.includes(brand);
-            return (
-              <button
-                key={brand}
-                type="button"
-                onClick={() => toggle(brands, brand, setBrands)}
-                className={`rounded-full border px-3 py-1.5 text-sm transition-colors ${
-                  on
-                    ? "border-clay-600 bg-blush-100 text-clay-600"
-                    : "border-line bg-cream text-ink-soft hover:border-taupe-300"
-                }`}
-              >
-                {brand}
-              </button>
-            );
-          })}
+      {allBrands.length > 0 && (
+        <div>
+          <span className="text-xs font-semibold uppercase tracking-wider text-taupe-700">
+            Marke
+          </span>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {allBrands.map((brand) => {
+              const on = brands.includes(brand);
+              return (
+                <button
+                  key={brand}
+                  type="button"
+                  onClick={() => toggle(brands, brand, setBrands)}
+                  className={`rounded-full border px-3 py-1.5 text-sm transition-colors ${
+                    on
+                      ? "border-clay-600 bg-blush-100 text-clay-600"
+                      : "border-line bg-cream text-ink-soft hover:border-taupe-300"
+                  }`}
+                >
+                  {brand}
+                </button>
+              );
+            })}
+          </div>
         </div>
-      </div>
+      )}
 
       {activeCount > 0 && (
         <button
@@ -184,6 +180,33 @@ export function BrowseClient({ initialOrt }: { initialOrt: string }) {
       )}
     </div>
   );
+
+  // No listings at all yet
+  if (boxes.length === 0) {
+    return (
+      <div className="mx-auto max-w-7xl px-3 py-12 sm:px-8">
+        <div className="max-w-2xl">
+          <h1 className="font-display text-4xl font-semibold tracking-tight sm:text-5xl">
+            Finde deine Dachbox
+          </h1>
+        </div>
+        <div className="mt-10 rounded-2xl border border-dashed border-taupe-300 bg-paper/40 px-6 py-20 text-center">
+          <p className="font-display text-xl font-semibold">
+            Noch keine Dachboxen inseriert
+          </p>
+          <p className="mt-2 text-ink-soft">
+            Sei der oder die Erste und biete deine Box an.
+          </p>
+          <Link
+            href="/vermieten/inserat"
+            className="mt-6 inline-block rounded-full bg-ink px-5 py-2.5 text-sm font-medium text-cream"
+          >
+            Box inserieren
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto max-w-7xl px-3 py-12 sm:px-8">

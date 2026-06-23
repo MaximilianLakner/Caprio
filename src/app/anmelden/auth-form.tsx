@@ -4,7 +4,7 @@ import { useActionState, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Mail, Lock, User, Loader2, Info, CheckCircle2, ArrowLeft } from "lucide-react";
-import { signIn, signUp, requestPasswordReset } from "./actions";
+import { signIn, signUp, requestPasswordReset, signInWithProvider } from "./actions";
 
 type Mode = "login" | "register" | "forgot";
 
@@ -61,6 +61,24 @@ export function AuthForm({ redirectTo }: { redirectTo?: string }) {
       )}
 
       <div className="mt-6 rounded-2xl border border-line bg-cream p-6 shadow-[0_18px_50px_-32px_rgba(42,36,33,0.25)]">
+        {mode !== "forgot" && (
+          <>
+            <div className="space-y-2.5">
+              <ProviderButton provider="google" label="Mit Google fortfahren" redirectTo={redirectTo}>
+                <GoogleIcon />
+              </ProviderButton>
+              <ProviderButton provider="apple" label="Mit Apple fortfahren" redirectTo={redirectTo}>
+                <AppleIcon />
+              </ProviderButton>
+            </div>
+            <div className="my-5 flex items-center gap-3 text-xs font-medium text-taupe-500">
+              <span className="h-px flex-1 bg-line" />
+              oder mit E-Mail
+              <span className="h-px flex-1 bg-line" />
+            </div>
+          </>
+        )}
+
         {mode === "login" && (
           <form action={loginAction} className="space-y-4">
             {redirectTo && <input type="hidden" name="redirect" value={redirectTo} />}
@@ -156,6 +174,51 @@ function Field({
         />
       </div>
     </div>
+  );
+}
+
+function ProviderButton({
+  provider,
+  label,
+  redirectTo,
+  children,
+}: {
+  provider: "google" | "apple";
+  label: string;
+  redirectTo?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <form action={signInWithProvider}>
+      <input type="hidden" name="provider" value={provider} />
+      <input type="hidden" name="next" value={redirectTo ?? "/meine-boxen"} />
+      <button
+        type="submit"
+        className="flex w-full items-center justify-center gap-2.5 rounded-full border border-line bg-cream py-2.5 text-sm font-medium text-ink transition-colors hover:border-taupe-300 hover:bg-paper/60"
+      >
+        {children}
+        {label}
+      </button>
+    </form>
+  );
+}
+
+function GoogleIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+      <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.27-4.74 3.27-8.1Z" />
+      <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.99.66-2.26 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23Z" />
+      <path fill="#FBBC05" d="M5.84 14.1a6.6 6.6 0 0 1 0-4.2V7.06H2.18a11 11 0 0 0 0 9.88l3.66-2.84Z" />
+      <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84C6.71 7.31 9.14 5.38 12 5.38Z" />
+    </svg>
+  );
+}
+
+function AppleIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true">
+      <path d="M16.37 1.43c.06 1.06-.33 2.08-1 2.83-.7.78-1.86 1.39-2.98 1.3-.08-1.04.42-2.1 1.06-2.78.72-.78 1.94-1.34 2.92-1.35ZM20.4 17.2c-.55 1.27-.82 1.84-1.53 2.96-.99 1.57-2.39 3.52-4.12 3.53-1.54.02-1.93-1-4.02-.99-2.09.01-2.52 1.01-4.06.99-1.73-.01-3.05-1.77-4.04-3.33C-.16 16.98-.45 11.84 1.26 9.11 2.47 7.17 4.39 6.04 6.19 6.04c1.83 0 2.98 1 4.5 1 1.47 0 2.36-1 4.48-1 1.6 0 3.3.87 4.51 2.38-3.96 2.17-3.32 7.82.72 8.78Z" />
+    </svg>
   );
 }
 

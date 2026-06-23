@@ -12,12 +12,20 @@ import {
 import { BoxCard } from "@/components/box-card";
 import { HeroIllustration } from "@/components/hero-illustration";
 import { Reveal } from "@/components/reveal";
-import { DACHBOXEN } from "@/lib/data";
+import { createClient } from "@/lib/supabase/server";
+import { mapBoxRow } from "@/lib/data";
 
 const BRANDS = ["Thule", "Kamei", "Hapro", "Yakima", "Atera", "Jetbag"];
 
-export default function HomePage() {
-  const featured = DACHBOXEN.filter((b) => b.superhost).slice(0, 3);
+export default async function HomePage() {
+  const supabase = await createClient();
+  const { data: latest } = await supabase
+    .from("dachboxen")
+    .select("*, profiles(name)")
+    .eq("is_available", true)
+    .order("created_at", { ascending: false })
+    .limit(3);
+  const featured = (latest ?? []).map(mapBoxRow);
 
   return (
     <>
@@ -133,14 +141,15 @@ export default function HomePage() {
       </section>
 
       {/* ------------------------------------------------------ Featured boxes */}
+      {featured.length > 0 && (
       <section className="mx-auto max-w-7xl px-3 py-20 sm:px-8">
         <Reveal className="flex items-end justify-between gap-4">
           <div>
             <p className="text-sm font-medium uppercase tracking-wider text-taupe-700">
-              Beliebt diese Woche
+              Frisch dabei
             </p>
             <h2 className="mt-2 font-display text-3xl font-semibold tracking-tight sm:text-4xl">
-              Boxen, die andere lieben
+              Neu auf Caprio
             </h2>
           </div>
           <Link
@@ -168,6 +177,7 @@ export default function HomePage() {
           <ArrowRight size={16} className="transition-transform duration-200 group-hover:translate-x-0.5" />
         </Link>
       </section>
+      )}
 
       {/* --------------------------------------------------------- Trust strip */}
       <section className="border-y border-line bg-paper/50">

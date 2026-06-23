@@ -15,13 +15,9 @@ import {
 import { RoofboxVisual } from "@/components/roofbox-visual";
 import { ImageCarousel } from "@/components/image-carousel";
 import { BookingCard } from "./booking-card";
-import { DACHBOXEN, getBox, sizeOf, SIZE_LABEL } from "@/lib/data";
+import { sizeOf, SIZE_LABEL, toneForId, mapBoxRow } from "@/lib/data";
 import { createClient } from "@/lib/supabase/server";
 import { getPayoutStatus } from "@/lib/stripe/account-status";
-
-export function generateStaticParams() {
-  return DACHBOXEN.map((b) => ({ id: b.id }));
-}
 
 type ViewBox = {
   title: string;
@@ -41,38 +37,11 @@ type ViewBox = {
   superhost: boolean;
   hostSince: number | null;
   tone: number;
-  isReal: boolean;
   hostId: string | null;
 };
 
-/** Resolve a box from mock data (slug ids) or Supabase (uuid ids). */
+/** Resolve a listing from Supabase by id. */
 async function resolveBox(id: string): Promise<ViewBox | null> {
-  const mock = getBox(id);
-  if (mock) {
-    return {
-      title: mock.title,
-      brand: mock.brand,
-      city: mock.city,
-      pricePerDay: mock.pricePerDay,
-      volume: mock.volume,
-      lengthCm: mock.lengthCm,
-      maxLoadKg: mock.maxLoadKg,
-      opening: mock.opening,
-      description: mock.description,
-      features: mock.features,
-      images: [],
-      host: mock.host,
-      rating: mock.rating,
-      reviews: mock.reviews,
-      superhost: mock.superhost,
-      hostSince: mock.hostSince,
-      tone: mock.tone,
-      isReal: false,
-      hostId: null,
-    };
-  }
-
-  // Not a mock id → try Supabase
   try {
     const supabase = await createClient();
     const { data } = await supabase
@@ -81,25 +50,25 @@ async function resolveBox(id: string): Promise<ViewBox | null> {
       .eq("id", id)
       .single();
     if (!data) return null;
+    const box = mapBoxRow(data);
     return {
-      title: data.title,
-      brand: data.brand,
-      city: data.city,
-      pricePerDay: Number(data.price_per_day),
-      volume: data.volume,
-      lengthCm: data.length_cm,
-      maxLoadKg: data.max_load_kg,
-      opening: data.opening,
-      description: data.description ?? "",
-      features: data.features ?? [],
-      images: data.images ?? [],
-      host: data.profiles?.name ?? "Vermieter:in",
+      title: box.title,
+      brand: box.brand,
+      city: box.city,
+      pricePerDay: box.pricePerDay,
+      volume: box.volume,
+      lengthCm: box.lengthCm,
+      maxLoadKg: box.maxLoadKg,
+      opening: box.opening,
+      description: box.description,
+      features: box.features,
+      images: box.images,
+      host: box.hostName ?? "Vermieter:in",
       rating: null,
       reviews: null,
       superhost: false,
       hostSince: null,
-      tone: 0,
-      isReal: true,
+      tone: toneForId(id),
       hostId: data.host_id,
     };
   } catch {
@@ -130,7 +99,7 @@ export default async function BoxDetailPage({
   // Bookability + already-booked dates (only for real Supabase boxes)
   let bookable = false;
   let bookedRanges: { start_date: string; end_date: string }[] = [];
-  if (box.isReal && box.hostId) {
+  if (box.hostId) {
     const supabase = await createClient();
     const [{ data: hostProfile }, { data: ranges }] = await Promise.all([
       supabase.from("profiles").select("stripe_account_id").eq("id", box.hostId).single(),
