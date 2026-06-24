@@ -1,6 +1,25 @@
 import Link from "next/link";
 import Image from "next/image";
+import { ShieldCheck, ArrowRight } from "lucide-react";
 import { SITE_NAME } from "@/lib/site";
+
+function InstagramIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <rect x="2" y="2" width="20" height="20" rx="5" />
+      <circle cx="12" cy="12" r="4" />
+      <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" />
+    </svg>
+  );
+}
+
+function FacebookIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
+      <path d="M14 9h2.5l.5-3H14V4.5c0-.85.3-1.5 1.6-1.5H17V.3A21 21 0 0 0 14.8 0C12.4 0 11 1.4 11 4.1V6H8.5v3H11v9h3V9Z" />
+    </svg>
+  );
+}
 
 const columns = [
   {
@@ -29,11 +48,44 @@ const columns = [
   },
 ];
 
+const socials = [
+  { href: "https://instagram.com", label: "Instagram", icon: InstagramIcon },
+  { href: "https://facebook.com", label: "Facebook", icon: FacebookIcon },
+];
+
 export function Footer() {
   return (
     <footer className="mt-24 border-t border-line bg-paper/60">
       <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8">
-        <div className="grid gap-12 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
+        {/* CTA band */}
+        <div className="flex flex-col gap-6 rounded-3xl border border-line bg-cream p-8 shadow-[0_24px_60px_-44px_rgba(17,53,29,0.5)] sm:flex-row sm:items-center sm:justify-between sm:p-10">
+          <div>
+            <h2 className="font-display text-2xl font-semibold tracking-tight sm:text-3xl">
+              Bereit für dein nächstes Abenteuer?
+            </h2>
+            <p className="mt-2 text-ink-soft">
+              Finde eine Box in deiner Nähe – oder verdiene mit deiner eigenen.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <Link
+              href="/dachboxen"
+              className="group inline-flex items-center gap-2 rounded-full bg-ink px-5 py-3 text-sm font-semibold text-cream transition-transform hover:-translate-y-px"
+            >
+              Box finden
+              <ArrowRight size={16} className="transition-transform duration-200 group-hover:translate-x-0.5" />
+            </Link>
+            <Link
+              href="/vermieten"
+              className="rounded-full border border-ink px-5 py-3 text-sm font-semibold text-ink transition-colors hover:bg-ink hover:text-cream"
+            >
+              Box vermieten
+            </Link>
+          </div>
+        </div>
+
+        {/* link columns */}
+        <div className="mt-16 grid gap-12 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <div className="max-w-xs">
             <Link href="/">
               <Image
@@ -47,6 +99,10 @@ export function Footer() {
             <p className="mt-4 text-sm leading-relaxed text-ink-soft">
               Der Marktplatz für Dachboxen von nebenan. Leih dir Stauraum für den
               nächsten Trip – oder verdiene mit, wenn deine Box gerade Pause hat.
+            </p>
+            <p className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-blush-100 px-3 py-1 text-xs font-medium text-clay-600">
+              <ShieldCheck size={13} />
+              Sichere Zahlung über Stripe
             </p>
           </div>
 
@@ -71,12 +127,25 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="mt-14 flex flex-col items-start justify-between gap-3 border-t border-line pt-6 text-sm text-ink-soft sm:flex-row sm:items-center">
+        <div className="mt-14 flex flex-col items-start justify-between gap-4 border-t border-line pt-6 text-sm text-ink-soft sm:flex-row sm:items-center">
           <p>
             © {new Date().getFullYear()} {SITE_NAME}. Mit Sorgfalt gebaut in
             Deutschland.
           </p>
-          <p className="text-taupe-700">Bezahlung folgt · MVP-Vorschau</p>
+          <div className="flex items-center gap-2">
+            {socials.map(({ href, label, icon: Icon }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={label}
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-line bg-cream text-ink-soft transition-colors hover:border-taupe-300 hover:text-ink"
+              >
+                <Icon />
+              </a>
+            ))}
+          </div>
         </div>
       </div>
     </footer>

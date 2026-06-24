@@ -302,6 +302,21 @@ export default async function HomePage() {
               Jetzt Box anbieten
               <ArrowRight size={16} className="transition-transform duration-200 group-hover:translate-x-0.5" />
             </Link>
+
+            <div className="mt-8 flex flex-wrap gap-x-5 gap-y-2 text-xs text-cream/70">
+              <span className="inline-flex items-center gap-1.5">
+                <ShieldCheck size={13} />
+                Sichere Zahlung über Stripe
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <Wallet size={13} />
+                Geld nach der Übergabe
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <Sparkles size={13} />
+                Du bestimmst den Preis
+              </span>
+            </div>
           </Reveal>
         </div>
       </section>

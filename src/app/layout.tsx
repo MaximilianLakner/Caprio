@@ -18,13 +18,47 @@ const fraunces = Fraunces({
   style: ["normal", "italic"],
 });
 
+const DESCRIPTION =
+  "Leih dir eine Dachbox für den nächsten Trip – oder verdiene Geld mit deiner, wenn sie gerade in der Garage steht. Von Mensch zu Mensch, tageweise.";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"
+  ),
   title: {
     default: `${SITE_NAME} — Dachboxen mieten & vermieten`,
     template: `%s · ${SITE_NAME}`,
   },
-  description:
-    "Leih dir eine Dachbox für den nächsten Trip – oder verdiene Geld mit deiner, wenn sie gerade in der Garage steht. Von Mensch zu Mensch, tageweise.",
+  description: DESCRIPTION,
+  keywords: [
+    "Dachbox mieten",
+    "Dachbox vermieten",
+    "Dachbox leihen",
+    "Dachträger",
+    "Roadtrip",
+    "Caprio",
+  ],
+  openGraph: {
+    type: "website",
+    locale: "de_DE",
+    siteName: SITE_NAME,
+    title: `${SITE_NAME} — Dachboxen mieten & vermieten`,
+    description: DESCRIPTION,
+    images: [
+      {
+        url: "/dachbox-hero.jpg",
+        width: 970,
+        height: 660,
+        alt: "Caprio – Dachboxen mieten & vermieten",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${SITE_NAME} — Dachboxen mieten & vermieten`,
+    description: DESCRIPTION,
+    images: ["/dachbox-hero.jpg"],
+  },
 };
 
 export default async function RootLayout({
