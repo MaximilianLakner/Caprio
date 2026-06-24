@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Package, ArrowRight, Banknote, CheckCircle2 } from "lucide-react";
+import { Package, ArrowRight, Banknote, CheckCircle2, Info } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { getPayoutStatus } from "@/lib/stripe/account-status";
 import { startHostOnboarding } from "@/lib/actions/connect";
@@ -12,7 +12,12 @@ export const metadata: Metadata = {
   description: "Bearbeite dein Caprio-Profil.",
 };
 
-export default async function ProfilPage() {
+export default async function ProfilPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ stripe_error?: string; stripe?: string }>;
+}) {
+  const { stripe_error: stripeError } = await searchParams;
   const supabase = await createClient();
   const {
     data: { user },
@@ -83,6 +88,15 @@ export default async function ProfilPage() {
                   ? "Dein Stripe-Onboarding ist noch nicht abgeschlossen. Schließ es ab, um Auszahlungen zu empfangen."
                   : "Richte Auszahlungen über Stripe ein, damit du deine Box vermieten und Geld empfangen kannst."}
             </p>
+
+            {stripeError && (
+              <p className="mt-3 flex items-start gap-2 rounded-lg bg-red-50 p-3 text-xs leading-relaxed text-red-700">
+                <Info size={14} className="mt-0.5 shrink-0" />
+                <span>
+                  Stripe-Onboarding konnte nicht gestartet werden: {stripeError}
+                </span>
+              </p>
+            )}
 
             {!payout.payoutsEnabled && (
               <form action={startHostOnboarding} className="mt-4">

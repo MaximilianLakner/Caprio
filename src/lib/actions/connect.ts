@@ -24,39 +24,47 @@ export async function startHostOnboarding() {
   } = await supabase.auth.getUser();
   if (!user) redirect("/anmelden?redirect=/profil");
 
-  const stripe = getStripe();
+  let onboardingUrl: string;
+  try {
+    const stripe = getStripe();
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("stripe_account_id")
-    .eq("id", user.id)
-    .single();
-
-  let accountId: string | undefined = profile?.stripe_account_id ?? undefined;
-
-  if (!accountId) {
-    const account = await stripe.accounts.create({
-      type: "express",
-      country: "DE",
-      email: user.email,
-      business_type: "individual",
-      capabilities: { transfers: { requested: true } },
-      metadata: { user_id: user.id },
-    });
-    accountId = account.id;
-    await supabase
+    const { data: profile } = await supabase
       .from("profiles")
-      .update({ stripe_account_id: accountId })
-      .eq("id", user.id);
+      .select("stripe_account_id")
+      .eq("id", user.id)
+      .single();
+
+    let accountId: string | undefined = profile?.stripe_account_id ?? undefined;
+
+    if (!accountId) {
+      const account = await stripe.accounts.create({
+        type: "express",
+        country: "DE",
+        email: user.email,
+        business_type: "individual",
+        capabilities: { transfers: { requested: true } },
+        metadata: { user_id: user.id },
+      });
+      accountId = account.id;
+      await supabase
+        .from("profiles")
+        .update({ stripe_account_id: accountId })
+        .eq("id", user.id);
+    }
+
+    const base = await originUrl("/profil");
+    const accountLink = await stripe.accountLinks.create({
+      account: accountId,
+      refresh_url: `${base}?stripe=refresh`,
+      return_url: `${base}?stripe=done`,
+      type: "account_onboarding",
+    });
+    onboardingUrl = accountLink.url;
+  } catch (err) {
+    // Surface the real reason on the profile page instead of crashing
+    const message = err instanceof Error ? err.message : "Unbekannter Fehler";
+    redirect(`/profil?stripe_error=${encodeURIComponent(message.slice(0, 300))}`);
   }
 
-  const base = await originUrl("/profil");
-  const accountLink = await stripe.accountLinks.create({
-    account: accountId,
-    refresh_url: `${base}?stripe=refresh`,
-    return_url: `${base}?stripe=done`,
-    type: "account_onboarding",
-  });
-
-  redirect(accountLink.url);
+  redirect(onboardingUrl);
 }
