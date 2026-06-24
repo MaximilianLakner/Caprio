@@ -1,11 +1,26 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Plus, MapPin, ToggleLeft, ToggleRight, Trash2, LogOut } from "lucide-react";
+import {
+  Plus,
+  MapPin,
+  ToggleLeft,
+  ToggleRight,
+  Trash2,
+  LogOut,
+  CalendarDays,
+} from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { RoofboxVisual } from "@/components/roofbox-visual";
 import { signOut } from "@/lib/actions/auth";
 import { deleteListing, toggleAvailability } from "./actions";
+
+function fmt(d: string) {
+  return new Date(`${d}T00:00:00`).toLocaleDateString("de-DE", {
+    day: "2-digit",
+    month: "short",
+  });
+}
 
 export const metadata: Metadata = {
   title: "Meine Boxen",
@@ -19,14 +34,21 @@ export default async function MeineBoxenPage() {
   } = await supabase.auth.getUser();
   if (!user) redirect("/anmelden");
 
-  const [{ data: listings }, { data: profile }] = await Promise.all([
-    supabase
-      .from("dachboxen")
-      .select("*")
-      .eq("host_id", user.id)
-      .order("created_at", { ascending: false }),
-    supabase.from("profiles").select("name").eq("id", user.id).single(),
-  ]);
+  const [{ data: listings }, { data: profile }, { data: hostBookings }] =
+    await Promise.all([
+      supabase
+        .from("dachboxen")
+        .select("*")
+        .eq("host_id", user.id)
+        .order("created_at", { ascending: false }),
+      supabase.from("profiles").select("name").eq("id", user.id).single(),
+      supabase
+        .from("bookings")
+        .select("*, dachboxen(title)")
+        .eq("host_id", user.id)
+        .in("status", ["paid", "completed"])
+        .order("start_date", { ascending: false }),
+    ]);
 
   return (
     <div className="mx-auto max-w-4xl px-3 py-12 sm:px-8">
@@ -154,6 +176,49 @@ export default async function MeineBoxenPage() {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Bookings on the host's boxes */}
+      {hostBookings && hostBookings.length > 0 && (
+        <div className="mt-14 border-t border-line pt-10">
+          <h2 className="font-display text-2xl font-semibold tracking-tight">
+            Buchungen deiner Boxen
+          </h2>
+          <div className="mt-6 space-y-3">
+            {hostBookings.map((b) => {
+              const box = Array.isArray(b.dachboxen) ? b.dachboxen[0] : b.dachboxen;
+              const paidOut = b.status === "completed";
+              return (
+                <div
+                  key={b.id}
+                  className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-line bg-cream p-4"
+                >
+                  <div>
+                    <p className="font-semibold">{box?.title ?? "Dachbox"}</p>
+                    <p className="mt-0.5 flex items-center gap-1 text-sm text-ink-soft">
+                      <CalendarDays size={13} />
+                      {fmt(b.start_date)} – {fmt(b.end_date)}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    {paidOut ? (
+                      <>
+                        <p className="font-display text-lg font-semibold text-clay-600">
+                          + {((b.host_payout ?? 0) / 100).toFixed(2)} €
+                        </p>
+                        <p className="text-xs text-ink-soft">ausgezahlt</p>
+                      </>
+                    ) : (
+                      <span className="rounded-full bg-blush-100 px-2.5 py-1 text-xs font-medium text-clay-600">
+                        Wartet auf Übergabe
+                      </span>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       )}
 

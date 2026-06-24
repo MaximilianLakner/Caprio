@@ -3,6 +3,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { CheckCircle2, MapPin, CalendarDays } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
+import { BookingActions } from "./booking-actions";
 
 export const metadata: Metadata = {
   title: "Meine Buchungen",
@@ -83,36 +84,63 @@ export default async function MeineBuchungenPage({
           {bookings.map((b) => {
             const box = Array.isArray(b.dachboxen) ? b.dachboxen[0] : b.dachboxen;
             const s = STATUS[b.status] ?? STATUS.pending;
+            const canCancel =
+              new Date(`${b.start_date}T00:00:00`).getTime() - Date.now() >
+              48 * 3600 * 1000;
             return (
               <div
                 key={b.id}
-                className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-line bg-cream p-5"
+                className="rounded-2xl border border-line bg-cream p-5"
               >
-                <div className="min-w-0">
-                  <h3 className="font-display text-lg font-semibold">
-                    {box?.title ?? "Dachbox"}
-                  </h3>
-                  <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-ink-soft">
-                    <span className="flex items-center gap-1">
-                      <MapPin size={13} />
-                      {box?.city}
+                <div className="flex flex-wrap items-center justify-between gap-4">
+                  <div className="min-w-0">
+                    <h3 className="font-display text-lg font-semibold">
+                      {box?.title ?? "Dachbox"}
+                    </h3>
+                    <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-ink-soft">
+                      <span className="flex items-center gap-1">
+                        <MapPin size={13} />
+                        {box?.city}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <CalendarDays size={13} />
+                        {fmt(b.start_date)} – {fmt(b.end_date)}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <span className="font-display text-lg font-semibold">
+                      {(b.amount_total / 100).toFixed(0)} €
                     </span>
-                    <span className="flex items-center gap-1">
-                      <CalendarDays size={13} />
-                      {fmt(b.start_date)} – {fmt(b.end_date)}
+                    <span
+                      className={`rounded-full px-2.5 py-1 text-xs font-medium ${s.cls}`}
+                    >
+                      {s.label}
                     </span>
                   </div>
                 </div>
-                <div className="flex items-center gap-4">
-                  <span className="font-display text-lg font-semibold">
-                    {(b.amount_total / 100).toFixed(0)} €
-                  </span>
-                  <span
-                    className={`rounded-full px-2.5 py-1 text-xs font-medium ${s.cls}`}
-                  >
-                    {s.label}
-                  </span>
-                </div>
+
+                {b.status === "paid" && (
+                  <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4">
+                    <p className="text-xs text-ink-soft">
+                      Box erhalten? Bestätige die Übergabe – danach wird der
+                      Vermieter ausgezahlt. Kostenlose Stornierung bis 48 Std.
+                      vor Abholung.
+                    </p>
+                    <BookingActions bookingId={b.id} canCancel={canCancel} />
+                  </div>
+                )}
+
+                {b.status === "completed" && (
+                  <p className="mt-3 border-t border-line pt-3 text-xs text-ink-soft">
+                    Übergabe bestätigt – der Vermieter wurde ausgezahlt. Gute Reise!
+                  </p>
+                )}
+                {b.status === "cancelled" && (
+                  <p className="mt-3 border-t border-line pt-3 text-xs text-ink-soft">
+                    Storniert – der Betrag wurde dir vollständig erstattet.
+                  </p>
+                )}
               </div>
             );
           })}

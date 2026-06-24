@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { Menu, X, Plus, Settings, Package, LogOut } from "lucide-react";
+import { Menu, X, Plus, Settings, Package, CalendarCheck, LogOut } from "lucide-react";
 import { NAV_LINKS, SITE_NAME } from "@/lib/site";
 import { signOut } from "@/lib/actions/auth";
 import { Avatar } from "@/components/avatar";
@@ -118,6 +118,13 @@ export function Navbar({ user }: { user: NavUser }) {
                         <Package size={16} className="text-ink-soft" />
                         Meine Boxen
                       </Link>
+                      <Link
+                        href="/meine-buchungen"
+                        className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-ink transition-colors hover:bg-paper"
+                      >
+                        <CalendarCheck size={16} className="text-ink-soft" />
+                        Meine Buchungen
+                      </Link>
                     </div>
                     <div className="border-t border-line p-1.5">
                       <form action={signOut}>
@@ -199,6 +206,13 @@ export function Navbar({ user }: { user: NavUser }) {
                   className="border-b border-line/60 py-3 text-base font-medium text-ink"
                 >
                   Meine Boxen
+                </Link>
+                <Link
+                  href="/meine-buchungen"
+                  onClick={() => setOpen(false)}
+                  className="border-b border-line/60 py-3 text-base font-medium text-ink"
+                >
+                  Meine Buchungen
                 </Link>
               </>
             )}
