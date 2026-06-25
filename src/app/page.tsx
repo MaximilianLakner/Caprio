@@ -10,7 +10,6 @@ import {
   MapPin,
 } from "lucide-react";
 import { BoxCard } from "@/components/box-card";
-import { HeroIllustration } from "@/components/hero-illustration";
 import { Reveal } from "@/components/reveal";
 import { createClient } from "@/lib/supabase/server";
 import { mapBoxRow } from "@/lib/data";
@@ -30,14 +29,10 @@ export default async function HomePage() {
   return (
     <>
       {/* ---------------------------------------------------------------- Hero */}
-      <section className="relative flex h-[calc(100svh-4rem)] flex-col items-center justify-center overflow-hidden px-3 text-center sm:px-8">
+      <section className="relative overflow-hidden px-4 pb-10 pt-12 text-center sm:px-8 sm:pt-16">
         <div className="grain pointer-events-none absolute inset-0" />
 
-        {/* hero illustration — large background object anchored bottom-centre,
-            its sun-halo arch rises up just behind the search bar */}
-        <HeroIllustration className="animate-rise pointer-events-none absolute bottom-0 left-1/2 z-0 w-[160%] max-w-none -translate-x-1/2 sm:w-[min(140%,910px)]" />
-
-        <div className="relative z-10 flex w-full max-w-4xl flex-col items-center pb-[34vh] sm:pb-[38vh]">
+        <div className="relative mx-auto flex max-w-3xl flex-col items-center">
           <span
             className="animate-rise inline-flex items-center gap-2 rounded-full border border-line bg-paper/70 px-3 py-1 text-xs font-medium text-taupe-700"
             style={{ animationDelay: "60ms" }}
@@ -47,10 +42,10 @@ export default async function HomePage() {
           </span>
 
           <h1
-            className="animate-rise mt-6 max-w-3xl font-display text-[2.6rem] font-semibold leading-[1.04] tracking-tight sm:text-6xl lg:text-7xl"
-            style={{ animationDelay: "140ms" }}
+            className="animate-rise mt-5 font-display text-[2.5rem] font-semibold leading-[1.03] tracking-tight sm:text-6xl lg:text-7xl"
+            style={{ animationDelay: "120ms" }}
           >
-            Mehr Stauraum für dein{" "}
+            Wohin geht dein{" "}
             <span className="relative whitespace-nowrap italic text-clay-600">
               Abenteuer
               <svg
@@ -68,11 +63,12 @@ export default async function HomePage() {
                 />
               </svg>
             </span>
+            ?
           </h1>
 
           <p
-            className="animate-rise mx-auto mt-5 max-w-xl text-base leading-relaxed text-ink-soft sm:text-lg"
-            style={{ animationDelay: "220ms" }}
+            className="animate-rise mx-auto mt-4 max-w-lg text-base leading-relaxed text-ink-soft sm:text-lg"
+            style={{ animationDelay: "200ms" }}
           >
             Leih dir eine Dachbox aus deiner Nähe – tageweise, fair und unkompliziert.
           </p>
@@ -80,8 +76,8 @@ export default async function HomePage() {
           {/* city / postal-code search */}
           <form
             action="/dachboxen"
-            className="animate-rise mt-7 flex w-full max-w-lg items-center gap-2 rounded-full border border-line bg-cream p-1.5 pl-5 shadow-[0_18px_50px_-30px_rgba(17,53,29,0.55)] transition-colors focus-within:border-clay-500"
-            style={{ animationDelay: "300ms" }}
+            className="animate-rise mt-7 flex w-full max-w-xl items-center gap-2 rounded-full border border-line bg-cream p-1.5 pl-4 shadow-[0_18px_50px_-30px_rgba(17,53,29,0.55)] transition-colors focus-within:border-clay-500 sm:pl-5"
+            style={{ animationDelay: "280ms" }}
           >
             <MapPin size={18} className="shrink-0 text-clay-600" />
             <input
@@ -93,30 +89,54 @@ export default async function HomePage() {
             />
             <button
               type="submit"
-              className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-ink px-5 py-3 text-sm font-semibold text-cream transition-transform hover:-translate-y-px"
+              className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-ink px-4 py-3 text-sm font-semibold text-cream transition-transform hover:-translate-y-px sm:px-5"
             >
               <Search size={16} />
               <span className="hidden sm:inline">Suchen</span>
             </button>
           </form>
+        </div>
 
-          <div
-            className="animate-rise mt-5 flex items-center gap-4 text-sm"
-            style={{ animationDelay: "380ms" }}
-          >
-            <Link
-              href="/dachboxen"
-              className="font-medium text-ink transition-colors hover:text-clay-600"
-            >
-              Alle Boxen ansehen
-            </Link>
-            <span className="text-taupe-300">·</span>
-            <Link
-              href="/vermieten"
-              className="font-medium text-ink transition-colors hover:text-clay-600"
-            >
-              Box vermieten
-            </Link>
+        {/* Tripadvisor-style promo card */}
+        <div
+          className="animate-rise relative mx-auto mt-9 max-w-5xl"
+          style={{ animationDelay: "360ms" }}
+        >
+          <div className="relative h-[300px] overflow-hidden rounded-[1.75rem] text-left shadow-[0_36px_80px_-44px_rgba(17,53,29,0.6)] sm:h-[380px]">
+            <Image
+              src="/dachbox-hero.jpg"
+              alt="Unterwegs mit der Dachbox"
+              fill
+              priority
+              sizes="(max-width: 1024px) 100vw, 1024px"
+              className="object-cover"
+            />
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#0a2114]/90 via-[#0a2114]/55 to-[#0a2114]/10" />
+            <div className="absolute inset-0 flex flex-col justify-center p-7 sm:p-12">
+              <div className="max-w-md text-cream">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-cream/15 px-3 py-1 text-xs font-medium backdrop-blur">
+                  <Sparkles size={13} />
+                  Beliebt für den Sommer
+                </span>
+                <h2 className="mt-4 font-display text-[1.9rem] font-semibold leading-tight tracking-tight sm:text-4xl">
+                  Plane deinen nächsten Roadtrip
+                </h2>
+                <p className="mt-3 max-w-sm text-sm leading-relaxed text-cream/85 sm:text-base">
+                  Finde die passende Dachbox in deiner Nähe – und hab Platz für
+                  alles, was mit muss.
+                </p>
+                <Link
+                  href="/dachboxen"
+                  className="group mt-6 inline-flex items-center gap-2 rounded-full bg-cream px-5 py-3 text-sm font-semibold text-ink transition-transform hover:-translate-y-px"
+                >
+                  Boxen entdecken
+                  <ArrowRight
+                    size={16}
+                    className="transition-transform duration-200 group-hover:translate-x-0.5"
+                  />
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -142,7 +162,7 @@ export default async function HomePage() {
 
       {/* ------------------------------------------------------ Featured boxes */}
       {featured.length > 0 && (
-      <section className="mx-auto max-w-7xl px-3 py-20 sm:px-8">
+      <section className="mx-auto max-w-7xl px-3 py-14 sm:px-8">
         <Reveal className="flex items-end justify-between gap-4">
           <div>
             <p className="text-sm font-medium uppercase tracking-wider text-taupe-700">
@@ -214,7 +234,7 @@ export default async function HomePage() {
 
       {/* --------------------------------------------------- How it works teaser */}
       <section className="bg-paper/50">
-        <div className="mx-auto max-w-7xl px-3 py-20 sm:px-8">
+        <div className="mx-auto max-w-7xl px-3 py-14 sm:px-8">
           <Reveal className="max-w-2xl">
             <p className="text-sm font-medium uppercase tracking-wider text-taupe-700">
               In drei Schritten
@@ -269,7 +289,7 @@ export default async function HomePage() {
       </section>
 
       {/* --------------------------------------------------------- Host CTA */}
-      <section className="mx-auto max-w-7xl px-3 py-20 sm:px-8">
+      <section className="mx-auto max-w-7xl px-3 py-14 sm:px-8">
         <div className="relative overflow-hidden rounded-3xl border border-white/15 px-8 py-16 text-cream shadow-[0_36px_80px_-40px_rgba(17,53,29,0.7)] ring-1 ring-inset ring-white/10 sm:px-14 sm:py-20">
           {/* photo background */}
           <Image
