@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ShieldCheck, ArrowRight } from "lucide-react";
+import { ShieldCheck } from "lucide-react";
 import { SITE_NAME } from "@/lib/site";
 
 function InstagramIcon() {
@@ -56,36 +56,9 @@ const socials = [
 export function Footer() {
   return (
     <footer className="mt-24 border-t border-line bg-paper/60">
-      <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8">
-        {/* CTA band */}
-        <div className="flex flex-col gap-6 rounded-3xl border border-line bg-cream p-8 shadow-[0_24px_60px_-44px_rgba(17,53,29,0.5)] sm:flex-row sm:items-center sm:justify-between sm:p-10">
-          <div>
-            <h2 className="font-display text-2xl font-semibold tracking-tight sm:text-3xl">
-              Bereit für dein nächstes Abenteuer?
-            </h2>
-            <p className="mt-2 text-ink-soft">
-              Finde eine Box in deiner Nähe – oder verdiene mit deiner eigenen.
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-3">
-            <Link
-              href="/dachboxen"
-              className="group inline-flex items-center gap-2 rounded-full bg-ink px-5 py-3 text-sm font-semibold text-cream transition-transform hover:-translate-y-px"
-            >
-              Box finden
-              <ArrowRight size={16} className="transition-transform duration-200 group-hover:translate-x-0.5" />
-            </Link>
-            <Link
-              href="/vermieten"
-              className="rounded-full border border-ink px-5 py-3 text-sm font-semibold text-ink transition-colors hover:bg-ink hover:text-cream"
-            >
-              Box vermieten
-            </Link>
-          </div>
-        </div>
-
+      <div className="mx-auto max-w-7xl px-5 py-14 sm:px-8">
         {/* link columns */}
-        <div className="mt-16 grid gap-12 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
+        <div className="grid gap-12 md:grid-cols-[1.5fr_1fr_1fr_1fr]">
           <div className="max-w-xs">
             <Link href="/">
               <Image

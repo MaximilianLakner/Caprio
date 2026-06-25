@@ -38,7 +38,7 @@ export function Navbar({ user }: { user: NavUser }) {
 
   return (
     <header className="sticky top-0 z-50 border-b border-line/70 bg-cream/80 backdrop-blur-md">
-      <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 sm:px-8">
+      <nav className="relative mx-auto flex h-16 max-w-7xl items-center justify-between px-5 sm:px-8">
         <Link href="/" className="flex items-center" onClick={() => setOpen(false)}>
           <Image
             src="/logo.png"
@@ -50,8 +50,8 @@ export function Navbar({ user }: { user: NavUser }) {
           />
         </Link>
 
-        {/* desktop nav links */}
-        <div className="hidden items-center gap-1 md:flex">
+        {/* desktop nav links — absolutely centred in the bar */}
+        <div className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-1 md:flex">
           {NAV_LINKS.map((link) => {
             const active = pathname.startsWith(link.href);
             return (

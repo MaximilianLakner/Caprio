@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Fraunces } from "next/font/google";
+import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
@@ -11,11 +11,12 @@ const inter = Inter({
   display: "swap",
 });
 
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
+const poppins = Poppins({
+  variable: "--font-poppins",
   subsets: ["latin"],
-  display: "swap",
+  weight: ["500", "600", "700"],
   style: ["normal", "italic"],
+  display: "swap",
 });
 
 const DESCRIPTION =
@@ -96,7 +97,7 @@ export default async function RootLayout({
   }
 
   return (
-    <html lang="de" className={`${inter.variable} ${fraunces.variable} h-full`}>
+    <html lang="de" className={`${inter.variable} ${poppins.variable} h-full`}>
       <body className="flex min-h-full flex-col">
         {/* If JS is unavailable, reveal-on-scroll content must still be visible */}
         <noscript>

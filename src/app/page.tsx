@@ -29,7 +29,7 @@ export default async function HomePage() {
   return (
     <>
       {/* ---------------------------------------------------------------- Hero */}
-      <section className="relative overflow-hidden px-4 pb-10 pt-12 text-center sm:px-8 sm:pt-16">
+      <section className="relative overflow-hidden px-4 pb-10 pt-6 text-center sm:px-8 sm:pt-10">
         <div className="grain pointer-events-none absolute inset-0" />
 
         <div className="relative mx-auto flex max-w-3xl flex-col items-center">
@@ -76,7 +76,7 @@ export default async function HomePage() {
           {/* city / postal-code search */}
           <form
             action="/dachboxen"
-            className="animate-rise mt-7 flex w-full max-w-xl items-center gap-2 rounded-full border border-line bg-cream p-1.5 pl-4 shadow-[0_18px_50px_-30px_rgba(17,53,29,0.55)] transition-colors focus-within:border-clay-500 sm:pl-5"
+            className="animate-rise mt-7 flex w-full max-w-2xl items-center gap-2 rounded-full border border-line bg-cream p-1.5 pl-4 shadow-[0_18px_50px_-30px_rgba(17,53,29,0.55)] transition-colors focus-within:border-clay-500 sm:pl-5"
             style={{ animationDelay: "280ms" }}
           >
             <MapPin size={18} className="shrink-0 text-clay-600" />
@@ -99,10 +99,10 @@ export default async function HomePage() {
 
         {/* Tripadvisor-style promo card */}
         <div
-          className="animate-rise relative mx-auto mt-9 max-w-5xl"
+          className="animate-rise relative mx-auto mt-7 max-w-5xl"
           style={{ animationDelay: "360ms" }}
         >
-          <div className="relative h-[300px] overflow-hidden rounded-[1.75rem] text-left shadow-[0_36px_80px_-44px_rgba(17,53,29,0.6)] sm:h-[380px]">
+          <div className="relative h-[300px] overflow-hidden rounded-2xl text-left shadow-[0_36px_80px_-44px_rgba(17,53,29,0.6)] sm:h-[380px]">
             <Image
               src="/dachbox-hero.jpg"
               alt="Unterwegs mit der Dachbox"
