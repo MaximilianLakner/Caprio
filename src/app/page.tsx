@@ -32,8 +32,8 @@ export default async function HomePage() {
       {/* ---------------------------------------------------------------- Hero */}
       <section className="bg-white px-4 pb-8 pt-10 text-center sm:px-8 sm:pt-14">
         <div className="mx-auto max-w-4xl">
-          <h1 className="mx-auto max-w-xl font-display text-[1.9rem] font-bold leading-[1.1] tracking-tight text-ink sm:text-4xl lg:text-[2.75rem]">
-            Welche Dachbox brauchst du?
+          <h1 className="whitespace-nowrap font-display text-[1.75rem] font-bold leading-[1.1] tracking-tight text-ink sm:text-4xl lg:text-5xl">
+            Finde deine Dachbox
           </h1>
 
           {/* Tripadvisor-style tab row */}
@@ -62,7 +62,7 @@ export default async function HomePage() {
           {/* Search bar */}
           <form
             action="/dachboxen"
-            className="mt-5 flex w-full items-center gap-2 rounded-full border border-taupe-200 bg-white p-1.5 pl-5 shadow-md focus-within:border-clay-600 sm:mt-6"
+            className="mt-5 flex w-full items-center gap-2 rounded-full border border-ink bg-white p-1.5 pl-5 shadow-md focus-within:border-ink sm:mt-6"
           >
             <MapPin size={18} className="shrink-0 text-taupe-500" />
             <input
@@ -156,7 +156,7 @@ export default async function HomePage() {
           </div>
 
           {/* horizontal scroller */}
-          <div className="mt-7 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:px-8">
+          <div className="mx-auto mt-7 flex max-w-7xl snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:px-8">
             {featured.map((box) => (
               <div
                 key={box.id}
@@ -181,39 +181,37 @@ export default async function HomePage() {
       )}
 
       {/* --------------------------------------------------------- Trust strip */}
-      <section className="bg-white">
-        <div className="mx-auto grid max-w-7xl gap-x-6 px-4 sm:grid-cols-3 sm:px-8">
-          {[
-            {
-              icon: Wallet,
-              title: "Fairer Tagespreis",
-              text: "Vermieter:innen legen den Preis selbst fest – meist ein Bruchteil vom Neukauf.",
-            },
-            {
-              icon: ShieldCheck,
-              title: "Geprüfte Profile",
-              text: "Verifizierte Mitglieder und transparente Bewertungen schaffen Vertrauen.",
-            },
-            {
-              icon: CalendarDays,
-              title: "Flexibel buchen",
-              text: "Genau so lange, wie du sie brauchst – vom Wochenende bis zum Sommerurlaub.",
-            },
-          ].map(({ icon: Icon, title, text }, i) => (
-            <Reveal
-              key={title}
-              delay={i * 90}
-              className="flex gap-4 py-6 sm:py-8"
-            >
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-blush-100">
-                <Icon size={18} className="text-clay-600" />
-              </span>
-              <div>
-                <h3 className="font-display font-bold text-ink">{title}</h3>
-                <p className="mt-1 text-sm leading-relaxed text-taupe-500">{text}</p>
-              </div>
-            </Reveal>
-          ))}
+      <section className="bg-[#f7f7f7]">
+        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-8 sm:py-16">
+          <div className="grid gap-x-8 gap-y-8 rounded-lg bg-[#00aa6c] px-6 py-10 sm:grid-cols-3 sm:px-10 sm:py-12">
+            {[
+              {
+                icon: Wallet,
+                title: "Fairer Tagespreis",
+                text: "Vermieter:innen legen den Preis selbst fest – meist ein Bruchteil vom Neukauf.",
+              },
+              {
+                icon: ShieldCheck,
+                title: "Geprüfte Profile",
+                text: "Verifizierte Mitglieder und transparente Bewertungen schaffen Vertrauen.",
+              },
+              {
+                icon: CalendarDays,
+                title: "Flexibel buchen",
+                text: "Genau so lange, wie du sie brauchst – vom Wochenende bis zum Sommerurlaub.",
+              },
+            ].map(({ icon: Icon, title, text }, i) => (
+              <Reveal key={title} delay={i * 90} className="flex gap-4">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/25">
+                  <Icon size={18} className="text-ink" />
+                </span>
+                <div>
+                  <h3 className="font-display font-bold text-ink">{title}</h3>
+                  <p className="mt-1 text-sm leading-relaxed text-ink/80">{text}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
 
