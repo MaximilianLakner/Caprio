@@ -155,8 +155,8 @@ export default async function HomePage() {
             <p className="mt-1 text-sm text-taupe-500">Angebote, die dir gefallen werden</p>
           </div>
 
-          {/* horizontal scroller */}
-          <div className="mx-auto mt-7 flex max-w-7xl snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:px-8">
+          {/* horizontal scroller — scroll-padding keeps the snap from eating the left gutter */}
+          <div className="mx-auto mt-7 flex max-w-7xl snap-x snap-mandatory scroll-pl-4 gap-4 overflow-x-auto px-4 pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:scroll-pl-8 sm:px-8">
             {featured.map((box) => (
               <div
                 key={box.id}

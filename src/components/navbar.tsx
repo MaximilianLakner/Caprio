@@ -156,20 +156,12 @@ export function Navbar({ user }: { user: NavUser }) {
               </div>
             </>
           ) : (
-            <>
-              <Link
-                href="/anmelden"
-                className="text-sm font-medium text-ink-soft transition-colors hover:text-ink"
-              >
-                Anmelden
-              </Link>
-              <Link
-                href="/dachboxen"
-                className="rounded-full bg-ink px-4 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90"
-              >
-                Box finden
-              </Link>
-            </>
+            <Link
+              href="/anmelden"
+              className="ml-1 rounded-full bg-ink px-5 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+            >
+              Anmelden
+            </Link>
           )}
         </div>
 
@@ -254,22 +246,13 @@ export function Navbar({ user }: { user: NavUser }) {
                 </form>
               </>
             ) : (
-              <>
-                <Link
-                  href="/anmelden"
-                  onClick={() => setOpen(false)}
-                  className="rounded-full border border-line px-4 py-3 text-center text-sm font-medium text-ink"
-                >
-                  Anmelden
-                </Link>
-                <Link
-                  href="/dachboxen"
-                  onClick={() => setOpen(false)}
-                  className="rounded-full bg-ink px-4 py-3 text-center text-sm font-medium text-white"
-                >
-                  Box finden
-                </Link>
-              </>
+              <Link
+                href="/anmelden"
+                onClick={() => setOpen(false)}
+                className="rounded-full bg-ink px-4 py-3 text-center text-sm font-medium text-white"
+              >
+                Anmelden
+              </Link>
             )}
           </div>
         </div>
