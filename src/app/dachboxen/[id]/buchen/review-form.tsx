@@ -21,7 +21,7 @@ export function ReviewForm({
       <input type="hidden" name="from" value={from} />
       <input type="hidden" name="to" value={to} />
 
-      <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-line bg-paper/40 p-4 text-sm">
+      <label className="flex cursor-pointer items-start gap-3 rounded-lg border border-line bg-paper/40 p-4 text-sm">
         <input
           type="checkbox"
           name="agb"

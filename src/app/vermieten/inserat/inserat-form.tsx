@@ -70,7 +70,7 @@ export function InseratForm() {
           {previews.map((p, i) => (
             <div
               key={p.key}
-              className="group relative aspect-[4/3] overflow-hidden rounded-xl border border-line bg-paper"
+              className="group relative aspect-[4/3] overflow-hidden rounded-lg border border-line bg-paper"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={p.url} alt="" className="h-full w-full object-cover" />
@@ -95,7 +95,7 @@ export function InseratForm() {
             <button
               type="button"
               onClick={() => fileRef.current?.click()}
-              className="flex aspect-[4/3] flex-col items-center justify-center gap-1.5 rounded-xl border border-dashed border-taupe-300 bg-paper/40 text-ink-soft transition-colors hover:border-clay-500 hover:text-clay-600"
+              className="flex aspect-[4/3] flex-col items-center justify-center gap-1.5 rounded-lg border border-dashed border-taupe-300 bg-paper/40 text-ink-soft transition-colors hover:border-clay-500 hover:text-clay-600"
             >
               <ImagePlus size={22} />
               <span className="text-xs font-medium">Bild hinzufügen</span>

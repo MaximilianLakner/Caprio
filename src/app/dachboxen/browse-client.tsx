@@ -296,7 +296,7 @@ export function BrowseClient({
             className="absolute inset-0 bg-ink/30 backdrop-blur-sm"
             onClick={() => setFiltersOpen(false)}
           />
-          <div className="absolute inset-x-0 bottom-0 max-h-[88vh] overflow-y-auto rounded-t-2xl bg-cream p-6 pb-10">
+          <div className="absolute inset-x-0 bottom-0 max-h-[88vh] overflow-y-auto rounded-t-lg bg-cream p-6 pb-10">
             <div className="mb-6 flex items-center justify-between">
               <h2 className="font-display text-xl font-semibold">Filter</h2>
               <button

@@ -153,7 +153,7 @@ export default function SoFunktioniertsPage() {
       </section>
 
       {/* for hosts */}
-      <section className="bg-paper/50">
+      <section className="bg-white">
         <div className="mx-auto max-w-7xl px-5 py-20 sm:px-8">
           <div className="flex flex-wrap items-center gap-3">
             <span className="rounded-full bg-blush-200 px-3 py-1 text-xs font-semibold text-clay-600">
@@ -169,7 +169,7 @@ export default function SoFunktioniertsPage() {
               <Reveal
                 key={step.title}
                 delay={i * 80}
-                className="rounded-xl border border-line bg-cream p-6"
+                className="rounded-lg border border-line bg-cream p-6"
               >
                 <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blush-100">
                   <step.icon size={20} className="text-clay-600" />
@@ -218,7 +218,7 @@ export default function SoFunktioniertsPage() {
             <Reveal
               key={title}
               delay={i * 90}
-              className="rounded-xl border border-line bg-paper/40 p-7"
+              className="rounded-lg border border-line bg-paper/40 p-7"
             >
               <Icon size={22} className="text-clay-600" />
               <h3 className="mt-4 text-lg font-semibold">{title}</h3>

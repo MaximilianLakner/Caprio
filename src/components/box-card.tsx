@@ -4,8 +4,12 @@ import Link from "next/link";
 import { MapPin, Heart } from "lucide-react";
 import { RoofboxVisual } from "@/components/roofbox-visual";
 import { sizeOf, toneForId, type BoxListing } from "@/lib/data";
+import { useFavorites } from "@/lib/use-favorites";
 
 export function BoxCard({ box }: { box: BoxListing }) {
+  const { isFavorite, toggle } = useFavorites();
+  const saved = isFavorite(box.id);
+
   return (
     <Link
       href={`/dachboxen/${box.id}`}
@@ -26,14 +30,21 @@ export function BoxCard({ box }: { box: BoxListing }) {
             className="h-full w-full transition-transform duration-500 group-hover:scale-[1.03]"
           />
         )}
-        {/* Heart */}
+        {/* Heart — saves the box to the local Merkliste */}
         <button
           type="button"
-          aria-label="Merken"
-          className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-ink-soft shadow-sm transition-colors hover:text-clay-600"
-          onClick={(e) => e.preventDefault()}
+          aria-label={saved ? "Aus Merkliste entfernen" : "Zur Merkliste hinzufügen"}
+          aria-pressed={saved}
+          className={`absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow-sm transition-colors hover:text-clay-600 ${
+            saved ? "text-clay-600" : "text-ink-soft"
+          }`}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            toggle(box);
+          }}
         >
-          <Heart size={15} />
+          <Heart size={15} className={saved ? "fill-current" : ""} />
         </button>
         {/* Size badge */}
         <span className="absolute bottom-3 left-3 rounded bg-white/90 px-2 py-0.5 text-xs font-semibold text-ink backdrop-blur-sm">

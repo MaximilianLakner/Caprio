@@ -42,7 +42,7 @@ export function AuthForm({ redirectTo }: { redirectTo?: string }) {
 
       {/* Tab toggle (hidden in forgot mode) */}
       {mode !== "forgot" && (
-        <div className="mt-8 flex rounded-xl border border-line bg-paper/60 p-1">
+        <div className="mt-8 flex rounded-lg border border-line bg-paper/60 p-1">
           {(["login", "register"] as const).map((t) => (
             <button
               key={t}

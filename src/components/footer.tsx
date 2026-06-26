@@ -55,7 +55,7 @@ const socials = [
 
 export function Footer() {
   return (
-    <footer className="bg-paper/60">
+    <footer className="bg-[#f7f7f7]">
       <div className="mx-auto max-w-7xl px-5 py-14 sm:px-8">
         {/* link columns */}
         <div className="grid gap-12 md:grid-cols-[1.5fr_1fr_1fr_1fr]">

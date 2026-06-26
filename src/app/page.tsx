@@ -31,13 +31,13 @@ export default async function HomePage() {
     <>
       {/* ---------------------------------------------------------------- Hero */}
       <section className="bg-white px-4 pb-8 pt-10 text-center sm:px-8 sm:pt-14">
-        <div className="mx-auto max-w-3xl">
-          <h1 className="font-display text-[2.4rem] font-bold leading-[1.05] tracking-tight text-ink sm:text-5xl lg:text-6xl">
+        <div className="mx-auto max-w-4xl">
+          <h1 className="mx-auto max-w-xl font-display text-[1.9rem] font-bold leading-[1.1] tracking-tight text-ink sm:text-4xl lg:text-[2.75rem]">
             Welche Dachbox brauchst du?
           </h1>
 
           {/* Tripadvisor-style tab row */}
-          <div className="mt-7 flex items-center justify-center gap-2">
+          <div className="mt-6 flex items-center justify-center gap-2">
             {[
               { label: "Dachboxen", href: "/dachboxen" },
               { label: "Vermieten", href: "/vermieten" },
@@ -84,46 +84,50 @@ export default async function HomePage() {
       </section>
 
       {/* --------------------------------------------------------- Promo card */}
-      <section className="bg-white px-4 pb-10 sm:px-8">
-        <div className="mx-auto max-w-5xl">
-          <div className="relative overflow-hidden rounded-lg bg-[#00aa6c] sm:flex sm:min-h-[280px]">
-            {/* text side */}
-            <div className="flex flex-col justify-center p-8 sm:w-1/2 sm:p-12">
-              <h2 className="font-display text-[1.75rem] font-bold leading-tight text-ink sm:text-[2rem]">
-                Bei uns findest du Dachboxen für jeden Roadtrip
-              </h2>
-              <p className="mt-3 text-sm leading-relaxed text-ink/80 sm:text-base">
-                Stöbere durch hunderte Angebote – tageweise mieten, fair und unkompliziert.
-              </p>
-              <Link
-                href="/dachboxen"
-                className="mt-6 inline-flex w-fit items-center gap-2 rounded-full bg-ink px-5 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-80"
-              >
-                Jetzt entdecken
-                <ArrowRight size={15} />
-              </Link>
-            </div>
-            {/* image side with gradient fade into green */}
-            <div className="relative h-48 sm:h-auto sm:w-1/2">
-              <Image
-                src="/dachbox-hero.jpg"
-                alt="Unterwegs mit der Dachbox"
-                fill
-                priority
-                sizes="(max-width: 640px) 100vw, 50vw"
-                className="object-cover"
-              />
-              {/* horizontal fade: left edge blends into the green panel */}
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#00aa6c] via-[#00aa6c]/20 to-transparent" />
-              {/* vertical fade on mobile: top edge blends upward */}
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#00aa6c] via-[#00aa6c]/20 to-transparent sm:hidden" />
+      <section className="bg-white px-4 pb-12 sm:px-8">
+        <div className="mx-auto max-w-6xl">
+          <div className="overflow-hidden rounded-lg bg-[#00aa6c]">
+            <div className="flex flex-col sm:flex-row sm:items-stretch sm:min-h-[420px]">
+              {/* text */}
+              <div className="order-2 flex flex-col justify-center p-7 pt-5 sm:order-1 sm:w-[45%] sm:p-12 sm:pt-12">
+                <h2 className="font-display text-[2rem] font-bold leading-[1.08] text-ink sm:text-[2.6rem]">
+                  Bei uns findest du Dachboxen für jeden Roadtrip
+                </h2>
+                <p className="mt-4 text-sm leading-relaxed text-ink/80 sm:text-lg">
+                  Stöbere durch hunderte Angebote – tageweise mieten, fair und
+                  unkompliziert.
+                </p>
+                <Link
+                  href="/dachboxen"
+                  className="mt-7 inline-flex w-fit items-center gap-2 rounded-full bg-ink px-6 py-3.5 text-sm font-semibold text-white transition-opacity hover:opacity-80"
+                >
+                  Jetzt entdecken
+                  <ArrowRight size={16} />
+                </Link>
+              </div>
+
+              {/* image — inset on mobile (green frame shows), full-bleed on desktop */}
+              <div className="order-1 p-4 pb-0 sm:order-2 sm:w-[55%] sm:p-0">
+                <div className="relative h-56 overflow-hidden rounded-md sm:h-full sm:rounded-none">
+                  <Image
+                    src="/dachbox-hero.jpg"
+                    alt="Unterwegs mit der Dachbox"
+                    fill
+                    priority
+                    sizes="(max-width: 640px) 100vw, 55vw"
+                    className="object-cover"
+                  />
+                  {/* on desktop the left edge fades into the green panel */}
+                  <div className="pointer-events-none absolute inset-0 hidden bg-gradient-to-r from-[#00aa6c] via-transparent to-transparent sm:block" />
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* ---------------------------------------------------------- Brand strip */}
-      <section className="bg-cream">
+      <section className="bg-white">
         <div className="mx-auto max-w-6xl px-4 py-8 sm:px-8">
           <p className="text-center text-xs font-semibold uppercase tracking-wider text-taupe-500">
             Boxen von Marken, denen Reisende vertrauen
@@ -214,7 +218,7 @@ export default async function HomePage() {
       </section>
 
       {/* --------------------------------------------------- How it works */}
-      <section className="bg-cream">
+      <section className="bg-white">
         <div className="mx-auto max-w-7xl px-4 py-14 sm:px-8">
           <Reveal>
             <h2 className="font-display text-2xl font-bold tracking-tight text-ink sm:text-3xl">
@@ -269,7 +273,7 @@ export default async function HomePage() {
 
       {/* --------------------------------------------------------- Host CTA */}
       <section className="mx-auto max-w-7xl px-4 py-14 sm:px-8">
-        <div className="relative overflow-hidden rounded-xl px-8 py-16 text-white shadow-xl sm:px-14 sm:py-20">
+        <div className="relative overflow-hidden rounded-lg px-8 py-16 text-white shadow-xl sm:px-14 sm:py-20">
           <Image
             src="/road.jpg"
             alt="Auto mit Dachbox auf einer Bergstraße durch den Wald"
@@ -318,7 +322,7 @@ export default async function HomePage() {
       </section>
 
       {/* --------------------------------------------------------------- FAQ */}
-      <section className="bg-white">
+      <section className="bg-[#f7f7f7]">
         <div className="mx-auto max-w-3xl px-4 py-14 sm:px-8 sm:py-16">
           <h2 className="font-display text-2xl font-bold tracking-tight text-ink sm:text-3xl">
             Häufige Fragen

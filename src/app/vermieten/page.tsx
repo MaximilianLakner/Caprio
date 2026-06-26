@@ -86,7 +86,7 @@ export default function VermietenPage() {
       </section>
 
       {/* estimator */}
-      <section className="bg-paper/50">
+      <section className="bg-white">
         <div className="mx-auto max-w-7xl px-5 py-20 sm:px-8">
           <Reveal className="mx-auto max-w-2xl text-center">
             <p className="text-sm font-medium uppercase tracking-wider text-taupe-700">

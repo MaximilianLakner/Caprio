@@ -4,10 +4,31 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { Menu, X, Plus, Settings, Package, CalendarCheck, LogOut } from "lucide-react";
+import { Menu, X, Plus, Settings, Package, CalendarCheck, LogOut, Heart } from "lucide-react";
 import { NAV_LINKS, SITE_NAME } from "@/lib/site";
 import { signOut } from "@/lib/actions/auth";
 import { Avatar } from "@/components/avatar";
+import { useFavorites } from "@/lib/use-favorites";
+
+/** Heart icon linking to the Merkliste, with a live saved-count badge. */
+function FavoritesLink({ onClick }: { onClick?: () => void }) {
+  const { count, ready } = useFavorites();
+  return (
+    <Link
+      href="/merkliste"
+      onClick={onClick}
+      aria-label={`Merkliste${ready && count ? ` (${count})` : ""}`}
+      className="relative flex h-10 w-10 items-center justify-center rounded-full text-ink transition-colors hover:bg-paper"
+    >
+      <Heart size={20} className={ready && count ? "fill-clay-600 text-clay-600" : ""} />
+      {ready && count > 0 && (
+        <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-clay-600 px-1 text-[10px] font-bold text-white">
+          {count}
+        </span>
+      )}
+    </Link>
+  );
+}
 
 type NavUser = {
   id: string;
@@ -71,12 +92,13 @@ export function Navbar({ user }: { user: NavUser }) {
         </div>
 
         {/* Desktop auth */}
-        <div className="hidden items-center gap-3 md:flex">
+        <div className="hidden items-center gap-2 md:flex">
+          <FavoritesLink />
           {user ? (
             <>
               <Link
                 href="/vermieten/inserat"
-                className="inline-flex items-center gap-1.5 rounded-full bg-ink px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90"
+                className="ml-1 inline-flex items-center gap-1.5 rounded-full bg-ink px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90"
               >
                 <Plus size={16} />
                 Dachbox hinzufügen
@@ -152,7 +174,8 @@ export function Navbar({ user }: { user: NavUser }) {
         </div>
 
         {/* Mobile right */}
-        <div className="flex items-center gap-2 md:hidden">
+        <div className="flex items-center gap-1 md:hidden">
+          <FavoritesLink onClick={() => setOpen(false)} />
           {user && (
             <Link href="/profil" aria-label="Profil" onClick={() => setOpen(false)}>
               <Avatar name={user.name} email={user.email} src={user.avatarUrl} className="h-9 w-9" />
@@ -183,6 +206,14 @@ export function Navbar({ user }: { user: NavUser }) {
                 {link.label}
               </Link>
             ))}
+            <Link
+              href="/merkliste"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-2 border-b border-line/60 py-3 text-base font-medium text-ink"
+            >
+              <Heart size={17} className="text-ink-soft" />
+              Merkliste
+            </Link>
             {user && (
               <>
                 {[

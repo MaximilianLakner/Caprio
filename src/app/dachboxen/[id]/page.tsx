@@ -138,7 +138,7 @@ export default async function BoxDetailPage({
           {box.images.length > 0 ? (
             <ImageCarousel images={box.images} alt={box.title} />
           ) : (
-            <div className="overflow-hidden rounded-[2rem] border border-line">
+            <div className="overflow-hidden rounded-lg border border-line">
               <RoofboxVisual tone={box.tone} className="aspect-[16/10] w-full" />
             </div>
           )}
@@ -229,7 +229,7 @@ export default async function BoxDetailPage({
           )}
 
           {/* host */}
-          <div className="mt-10 flex items-center gap-4 rounded-xl border border-line bg-paper/40 p-6">
+          <div className="mt-10 flex items-center gap-4 rounded-lg border border-line bg-paper/40 p-6">
             <span className="flex h-14 w-14 items-center justify-center rounded-full bg-taupe-200 font-display text-xl font-semibold text-ink">
               {box.host.charAt(0)}
             </span>

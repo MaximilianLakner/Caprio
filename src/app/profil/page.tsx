@@ -68,7 +68,7 @@ export default async function ProfilPage({
       {/* Payouts / Stripe Connect */}
       <div className="mt-6 rounded-lg border border-line bg-cream p-6">
         <div className="flex items-start gap-3">
-          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blush-100">
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-blush-100">
             <Banknote size={18} className="text-clay-600" />
           </span>
           <div className="flex-1">
@@ -118,7 +118,7 @@ export default async function ProfilPage({
         className="mt-6 flex items-center justify-between rounded-lg border border-line bg-cream p-5 transition-colors hover:border-taupe-300"
       >
         <div className="flex items-center gap-3">
-          <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-blush-100">
+          <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-blush-100">
             <Package size={18} className="text-clay-600" />
           </span>
           <div>

@@ -11,16 +11,16 @@
    component recolours cohesively without renaming utility classes.
 ---------------------------------------------------------------------------- */
 @theme {
-  /* surfaces — paper white with the faintest green wash */
-  --color-cream: #f6faf7;
-  --color-paper: #ecf3ee;
-  --color-sand: #dfeae2;
+  /* surfaces — neutral white; the only off-white accent is #f7f7f7 */
+  --color-cream: #ffffff;
+  --color-paper: #f7f7f7;
+  --color-sand: #ededed;
 
-  /* neutral green-grey ramp (was "taupe") — blends sky + forest */
-  --color-taupe-100: #e4ede7;
-  --color-taupe-200: #cdddd4;
-  --color-taupe-300: #afc4cf; /* sky blue-grey */
-  --color-taupe-500: #748d83;
+  /* neutral grey ramp (was "taupe") — borders + muted text */
+  --color-taupe-100: #ececec;
+  --color-taupe-200: #dcdcdc;
+  --color-taupe-300: #c2c2c2;
+  --color-taupe-500: #707873;
   --color-taupe-700: #3c5749;
 
   /* sage / mint accents (was "blush") */
@@ -35,7 +35,7 @@
   /* ink — deep forest for text */
   --color-ink: #11351d;
   --color-ink-soft: #4c6356;
-  --color-line: #d7e4dc;
+  --color-line: #e6e6e6;
 
   /* named brand tokens (use freely in new code) */
   --color-forest: #11351d;
@@ -57,7 +57,7 @@
   }
 
   body {
-    background-color: var(--color-cream);
+    background-color: #ffffff;
     color: var(--color-ink);
     font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;

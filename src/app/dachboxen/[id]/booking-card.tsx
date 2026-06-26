@@ -51,7 +51,7 @@ export function BookingCard({
   }
 
   return (
-    <div className="rounded-xl border border-line bg-cream p-6 shadow-[0_18px_50px_-30px_rgba(42,36,33,0.4)]">
+    <div className="rounded-lg border border-line bg-cream p-6 shadow-[0_18px_50px_-30px_rgba(42,36,33,0.4)]">
       <div className="flex items-baseline justify-between">
         <p>
           <span className="font-display text-3xl font-semibold">{pricePerDay} €</span>
@@ -134,13 +134,13 @@ export function BookingCard({
           {valid && <ArrowRight size={16} />}
         </button>
       ) : (
-        <p className="mt-5 rounded-xl bg-paper/60 p-3 text-center text-xs leading-relaxed text-ink-soft">
+        <p className="mt-5 rounded-lg bg-paper/60 p-3 text-center text-xs leading-relaxed text-ink-soft">
           Diese Box ist aktuell nicht buchbar.
         </p>
       )}
 
       {bookable && (
-        <p className="mt-4 flex items-start gap-2 rounded-xl bg-paper/60 p-3 text-xs leading-relaxed text-ink-soft">
+        <p className="mt-4 flex items-start gap-2 rounded-lg bg-paper/60 p-3 text-xs leading-relaxed text-ink-soft">
           <Info size={14} className="mt-0.5 shrink-0 text-taupe-500" />
           Sichere Zahlung über Stripe. Dein Geld wird treuhänderisch gehalten und
           erst nach der Übergabe an den Vermieter ausgezahlt.

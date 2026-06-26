@@ -18,7 +18,7 @@ export function ImageCarousel({
   return (
     <div>
       {/* main image */}
-      <div className="group relative aspect-[16/10] overflow-hidden rounded-[2rem] border border-line bg-paper">
+      <div className="group relative aspect-[16/10] overflow-hidden rounded-lg border border-line bg-paper">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={images[index]}
@@ -61,7 +61,7 @@ export function ImageCarousel({
               type="button"
               onClick={() => setIndex(i)}
               aria-label={`Bild ${i + 1} anzeigen`}
-              className={`relative h-16 w-20 shrink-0 overflow-hidden rounded-xl border-2 transition ${
+              className={`relative h-16 w-20 shrink-0 overflow-hidden rounded-lg border-2 transition ${
                 i === index ? "border-ink" : "border-transparent opacity-70 hover:opacity-100"
               }`}
             >
