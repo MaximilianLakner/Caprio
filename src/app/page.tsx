@@ -8,6 +8,10 @@ import {
   Sparkles,
   Search,
   MapPin,
+  Heart,
+  Star,
+  Box,
+  Tag,
 } from "lucide-react";
 import { BoxCard } from "@/components/box-card";
 import { Reveal } from "@/components/reveal";
@@ -16,6 +20,13 @@ import { mapBoxRow } from "@/lib/data";
 
 const BRANDS = ["Thule", "Kamei", "Hapro", "Yakima", "Atera", "Jetbag"];
 
+const CATEGORIES = [
+  { label: "Alle", icon: Search, href: "/dachboxen" },
+  { label: "Dachboxen", icon: Box, href: "/dachboxen?typ=box" },
+  { label: "Angebote", icon: Tag, href: "/dachboxen?sort=preis_asc" },
+  { label: "Vermieten", icon: Sparkles, href: "/vermieten" },
+];
+
 export default async function HomePage() {
   const supabase = await createClient();
   const { data: latest } = await supabase
@@ -23,135 +34,106 @@ export default async function HomePage() {
     .select("*, profiles(name)")
     .eq("is_available", true)
     .order("created_at", { ascending: false })
-    .limit(3);
+    .limit(4);
   const featured = (latest ?? []).map(mapBoxRow);
 
   return (
     <>
       {/* ---------------------------------------------------------------- Hero */}
-      <section className="relative overflow-hidden px-4 pb-10 pt-6 text-center sm:px-8 sm:pt-10">
-        <div className="grain pointer-events-none absolute inset-0" />
-
-        <div className="relative mx-auto flex max-w-3xl flex-col items-center">
-          <span
-            className="animate-rise inline-flex items-center gap-2 rounded-full border border-line bg-paper/70 px-3 py-1 text-xs font-medium text-taupe-700"
-            style={{ animationDelay: "60ms" }}
-          >
-            <Sparkles size={13} className="text-clay-500" />
-            Dachboxen mieten & vermieten
-          </span>
-
-          <h1
-            className="animate-rise mt-5 font-display text-[2.5rem] font-semibold leading-[1.03] tracking-tight sm:text-6xl lg:text-7xl"
-            style={{ animationDelay: "120ms" }}
-          >
-            Wohin geht dein{" "}
-            <span className="relative whitespace-nowrap italic text-clay-600">
-              Abenteuer
-              <svg
-                viewBox="0 0 240 18"
-                preserveAspectRatio="none"
-                fill="none"
-                className="absolute -bottom-2 left-0 h-3 w-full text-clay-500"
-                aria-hidden="true"
-              >
-                <path
-                  d="M4 12C64 4 182 3 236 9"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </span>
-            ?
+      <section className="bg-white px-4 pb-8 pt-10 text-center sm:px-8 sm:pt-14">
+        <div className="mx-auto max-w-3xl">
+          <h1 className="font-display text-[2.4rem] font-bold leading-[1.05] tracking-tight text-ink sm:text-5xl lg:text-6xl">
+            Welche Dachbox brauchst du?
           </h1>
 
-          <p
-            className="animate-rise mx-auto mt-4 max-w-lg text-base leading-relaxed text-ink-soft sm:text-lg"
-            style={{ animationDelay: "200ms" }}
-          >
-            Leih dir eine Dachbox aus deiner Nähe – tageweise, fair und unkompliziert.
-          </p>
+          {/* Category tabs */}
+          <div className="mt-7 flex flex-wrap items-center justify-center gap-1 sm:gap-2">
+            {CATEGORIES.map(({ label, icon: Icon, href }, i) => (
+              <Link
+                key={label}
+                href={href}
+                className={`inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
+                  i === 0
+                    ? "border-ink bg-ink text-white"
+                    : "border-taupe-200 bg-white text-ink hover:border-clay-600 hover:text-clay-600"
+                }`}
+              >
+                <Icon size={15} />
+                {label}
+              </Link>
+            ))}
+          </div>
 
-          {/* city / postal-code search */}
+          {/* Search bar */}
           <form
             action="/dachboxen"
-            className="animate-rise mt-7 flex w-full max-w-2xl items-center gap-2 rounded-full border border-line bg-cream p-1.5 pl-4 shadow-[0_18px_50px_-30px_rgba(17,53,29,0.55)] transition-colors focus-within:border-clay-500 sm:pl-5"
-            style={{ animationDelay: "280ms" }}
+            className="mt-5 flex w-full items-center gap-2 rounded-full border border-taupe-200 bg-white p-1.5 pl-5 shadow-md focus-within:border-clay-600 sm:mt-6"
           >
-            <MapPin size={18} className="shrink-0 text-clay-600" />
+            <MapPin size={18} className="shrink-0 text-taupe-500" />
             <input
               type="text"
               name="ort"
               placeholder="Stadt oder PLZ eingeben …"
               aria-label="Stadt oder Postleitzahl"
-              className="w-full bg-transparent py-2.5 text-sm outline-none placeholder:text-taupe-500"
+              className="w-full bg-transparent py-2.5 text-sm text-ink outline-none placeholder:text-taupe-500"
             />
             <button
               type="submit"
-              className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-ink px-4 py-3 text-sm font-semibold text-cream transition-transform hover:-translate-y-px sm:px-5"
+              className="inline-flex shrink-0 items-center gap-2 rounded-full bg-clay-600 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-clay-500"
             >
-              <Search size={16} />
+              <Search size={15} />
               <span className="hidden sm:inline">Suchen</span>
             </button>
           </form>
         </div>
+      </section>
 
-        {/* Tripadvisor-style promo card */}
-        <div
-          className="animate-rise relative mx-auto mt-7 max-w-5xl"
-          style={{ animationDelay: "360ms" }}
-        >
-          <div className="relative h-[300px] overflow-hidden rounded-2xl text-left shadow-[0_36px_80px_-44px_rgba(17,53,29,0.6)] sm:h-[380px]">
-            <Image
-              src="/dachbox-hero.jpg"
-              alt="Unterwegs mit der Dachbox"
-              fill
-              priority
-              sizes="(max-width: 1024px) 100vw, 1024px"
-              className="object-cover"
-            />
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#0a2114]/90 via-[#0a2114]/55 to-[#0a2114]/10" />
-            <div className="absolute inset-0 flex flex-col justify-center p-7 sm:p-12">
-              <div className="max-w-md text-cream">
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-cream/15 px-3 py-1 text-xs font-medium backdrop-blur">
-                  <Sparkles size={13} />
-                  Beliebt für den Sommer
-                </span>
-                <h2 className="mt-4 font-display text-[1.9rem] font-semibold leading-tight tracking-tight sm:text-4xl">
-                  Plane deinen nächsten Roadtrip
-                </h2>
-                <p className="mt-3 max-w-sm text-sm leading-relaxed text-cream/85 sm:text-base">
-                  Finde die passende Dachbox in deiner Nähe – und hab Platz für
-                  alles, was mit muss.
-                </p>
-                <Link
-                  href="/dachboxen"
-                  className="group mt-6 inline-flex items-center gap-2 rounded-full bg-cream px-5 py-3 text-sm font-semibold text-ink transition-transform hover:-translate-y-px"
-                >
-                  Boxen entdecken
-                  <ArrowRight
-                    size={16}
-                    className="transition-transform duration-200 group-hover:translate-x-0.5"
-                  />
-                </Link>
-              </div>
+      {/* --------------------------------------------------------- Promo card */}
+      <section className="bg-white px-4 pb-10 sm:px-8">
+        <div className="mx-auto max-w-5xl">
+          <div className="relative overflow-hidden rounded-2xl bg-[#00aa6c] sm:flex sm:min-h-[280px]">
+            {/* text side */}
+            <div className="flex flex-col justify-center p-8 sm:w-1/2 sm:p-12">
+              <h2 className="font-display text-[1.75rem] font-bold leading-tight text-ink sm:text-[2rem]">
+                Bei uns findest du Dachboxen für jeden Roadtrip
+              </h2>
+              <p className="mt-3 text-sm leading-relaxed text-ink/80 sm:text-base">
+                Stöbere durch hunderte Angebote – tageweise mieten, fair und unkompliziert.
+              </p>
+              <Link
+                href="/dachboxen"
+                className="mt-6 inline-flex w-fit items-center gap-2 rounded-full bg-ink px-5 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-80"
+              >
+                Jetzt entdecken
+                <ArrowRight size={15} />
+              </Link>
+            </div>
+            {/* image side */}
+            <div className="relative h-48 sm:h-auto sm:w-1/2">
+              <Image
+                src="/dachbox-hero.jpg"
+                alt="Unterwegs mit der Dachbox"
+                fill
+                priority
+                sizes="(max-width: 640px) 100vw, 50vw"
+                className="object-cover"
+              />
             </div>
           </div>
         </div>
       </section>
 
       {/* ---------------------------------------------------------- Brand strip */}
-      <section className="border-t border-line bg-cream">
-        <div className="mx-auto max-w-6xl px-3 py-9 sm:px-8">
-          <p className="text-center text-xs font-medium uppercase tracking-wider text-taupe-500">
+      <section className="border-y border-taupe-100 bg-cream">
+        <div className="mx-auto max-w-6xl px-4 py-8 sm:px-8">
+          <p className="text-center text-xs font-semibold uppercase tracking-wider text-taupe-500">
             Boxen von Marken, denen Reisende vertrauen
           </p>
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-x-12 gap-y-5 opacity-75 sm:gap-x-20">
+          <div className="mt-5 flex flex-wrap items-center justify-center gap-x-10 gap-y-4 sm:gap-x-16">
             {BRANDS.map((brand) => (
               <span
                 key={brand}
-                className="font-display text-2xl font-semibold tracking-tight text-taupe-700 sm:text-3xl"
+                className="font-display text-xl font-bold tracking-tight text-taupe-500 sm:text-2xl"
               >
                 {brand}
               </span>
@@ -162,46 +144,44 @@ export default async function HomePage() {
 
       {/* ------------------------------------------------------ Featured boxes */}
       {featured.length > 0 && (
-      <section className="mx-auto max-w-7xl px-3 py-14 sm:px-8">
-        <Reveal className="flex items-end justify-between gap-4">
-          <div>
-            <p className="text-sm font-medium uppercase tracking-wider text-taupe-700">
-              Frisch dabei
-            </p>
-            <h2 className="mt-2 font-display text-3xl font-semibold tracking-tight sm:text-4xl">
-              Neu auf Caprio
-            </h2>
+        <section className="mx-auto max-w-7xl px-4 py-12 sm:px-8">
+          <Reveal className="flex items-end justify-between gap-4">
+            <div>
+              <h2 className="font-display text-2xl font-bold tracking-tight text-ink sm:text-3xl">
+                Unverzichtbare Dachboxen in deiner Nähe
+              </h2>
+              <p className="mt-1 text-sm text-taupe-500">Angebote, die dir gefallen werden</p>
+            </div>
+            <Link
+              href="/dachboxen"
+              className="group hidden shrink-0 items-center gap-1.5 text-sm font-semibold text-clay-600 transition-colors hover:text-clay-500 sm:inline-flex"
+            >
+              Alle ansehen
+              <ArrowRight size={16} className="transition-transform duration-200 group-hover:translate-x-0.5" />
+            </Link>
+          </Reveal>
+
+          <div className="mt-7 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {featured.map((box, i) => (
+              <Reveal key={box.id} delay={i * 80}>
+                <BoxCard box={box} />
+              </Reveal>
+            ))}
           </div>
+
           <Link
             href="/dachboxen"
-            className="group hidden shrink-0 items-center gap-1.5 text-sm font-medium text-ink transition-colors hover:text-clay-600 sm:inline-flex"
+            className="group mt-8 inline-flex items-center gap-1.5 text-sm font-semibold text-clay-600 hover:text-clay-500 sm:hidden"
           >
             Alle ansehen
             <ArrowRight size={16} className="transition-transform duration-200 group-hover:translate-x-0.5" />
           </Link>
-        </Reveal>
-
-        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {featured.map((box, i) => (
-            <Reveal key={box.id} delay={i * 90}>
-              <BoxCard box={box} />
-            </Reveal>
-          ))}
-        </div>
-
-        <Link
-          href="/dachboxen"
-          className="group mt-10 inline-flex items-center gap-1.5 text-sm font-medium text-ink transition-colors hover:text-clay-600 sm:hidden"
-        >
-          Alle ansehen
-          <ArrowRight size={16} className="transition-transform duration-200 group-hover:translate-x-0.5" />
-        </Link>
-      </section>
+        </section>
       )}
 
       {/* --------------------------------------------------------- Trust strip */}
-      <section className="border-y border-line bg-paper/50">
-        <div className="mx-auto grid max-w-7xl gap-px px-3 py-10 sm:grid-cols-3 sm:px-8">
+      <section className="border-y border-taupe-100 bg-white">
+        <div className="mx-auto grid max-w-7xl gap-0 px-4 sm:grid-cols-3 sm:px-8">
           {[
             {
               icon: Wallet,
@@ -219,32 +199,34 @@ export default async function HomePage() {
               text: "Genau so lange, wie du sie brauchst – vom Wochenende bis zum Sommerurlaub.",
             },
           ].map(({ icon: Icon, title, text }, i) => (
-            <Reveal key={title} delay={i * 90} className="flex gap-4 px-2 py-4">
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-line bg-cream">
+            <Reveal
+              key={title}
+              delay={i * 90}
+              className="flex gap-4 border-b border-taupe-100 px-4 py-8 last:border-b-0 sm:border-b-0 sm:border-r sm:last:border-r-0 sm:px-8"
+            >
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-blush-100">
                 <Icon size={18} className="text-clay-600" />
               </span>
               <div>
-                <h3 className="font-semibold">{title}</h3>
-                <p className="mt-1 text-sm leading-relaxed text-ink-soft">{text}</p>
+                <h3 className="font-display font-bold text-ink">{title}</h3>
+                <p className="mt-1 text-sm leading-relaxed text-taupe-500">{text}</p>
               </div>
             </Reveal>
           ))}
         </div>
       </section>
 
-      {/* --------------------------------------------------- How it works teaser */}
-      <section className="bg-paper/50">
-        <div className="mx-auto max-w-7xl px-3 py-14 sm:px-8">
-          <Reveal className="max-w-2xl">
-            <p className="text-sm font-medium uppercase tracking-wider text-taupe-700">
-              In drei Schritten
-            </p>
-            <h2 className="mt-2 font-display text-3xl font-semibold tracking-tight sm:text-4xl">
-              So einfach kommst du an mehr Stauraum
+      {/* --------------------------------------------------- How it works */}
+      <section className="bg-cream">
+        <div className="mx-auto max-w-7xl px-4 py-14 sm:px-8">
+          <Reveal>
+            <h2 className="font-display text-2xl font-bold tracking-tight text-ink sm:text-3xl">
+              In drei Schritten zur Dachbox
             </h2>
+            <p className="mt-1 text-sm text-taupe-500">So einfach kommst du an mehr Stauraum</p>
           </Reveal>
 
-          <div className="mt-12 grid gap-5 md:grid-cols-3">
+          <div className="mt-8 grid gap-4 sm:grid-cols-3">
             {[
               {
                 n: "01",
@@ -265,13 +247,13 @@ export default async function HomePage() {
               <Reveal
                 key={step.n}
                 delay={i * 90}
-                className="relative rounded-2xl border border-blush-200 bg-blush-100 p-7"
+                className="rounded-2xl border border-taupe-100 bg-white p-7"
               >
-                <span className="font-display text-4xl font-semibold text-taupe-300">
+                <span className="font-display text-3xl font-bold text-taupe-200">
                   {step.n}
                 </span>
-                <h3 className="mt-4 text-lg font-semibold">{step.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-ink-soft">
+                <h3 className="mt-4 font-display font-bold text-ink">{step.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-taupe-500">
                   {step.text}
                 </p>
               </Reveal>
@@ -280,7 +262,7 @@ export default async function HomePage() {
 
           <Link
             href="/so-funktionierts"
-            className="group mt-10 inline-flex items-center gap-1.5 text-sm font-medium text-ink transition-colors hover:text-clay-600"
+            className="group mt-8 inline-flex items-center gap-1.5 text-sm font-semibold text-clay-600 transition-colors hover:text-clay-500"
           >
             Mehr darüber, wie&apos;s funktioniert
             <ArrowRight size={16} className="transition-transform duration-200 group-hover:translate-x-0.5" />
@@ -289,9 +271,8 @@ export default async function HomePage() {
       </section>
 
       {/* --------------------------------------------------------- Host CTA */}
-      <section className="mx-auto max-w-7xl px-3 py-14 sm:px-8">
-        <div className="relative overflow-hidden rounded-3xl border border-white/15 px-8 py-16 text-cream shadow-[0_36px_80px_-40px_rgba(17,53,29,0.7)] ring-1 ring-inset ring-white/10 sm:px-14 sm:py-20">
-          {/* photo background */}
+      <section className="mx-auto max-w-7xl px-4 py-14 sm:px-8">
+        <div className="relative overflow-hidden rounded-3xl px-8 py-16 text-white shadow-xl sm:px-14 sm:py-20">
           <Image
             src="/road.jpg"
             alt="Auto mit Dachbox auf einer Bergstraße durch den Wald"
@@ -300,30 +281,28 @@ export default async function HomePage() {
             sizes="(max-width: 1280px) 100vw, 1216px"
             className="object-cover object-[50%_58%]"
           />
-          {/* darkening filter for legibility — forest-tinted, stronger on the left */}
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#0a2114]/85 via-[#0a2114]/55 to-[#0a2114]/25" />
-          <div className="pointer-events-none absolute inset-0 bg-[#0a2114]/20" />
 
           <Reveal className="relative max-w-xl">
-            <p className="text-sm font-medium uppercase tracking-wider text-blush-300">
+            <p className="text-xs font-semibold uppercase tracking-widest text-blush-300">
               Box vermieten
             </p>
-            <h2 className="mt-3 font-display text-3xl font-semibold leading-tight tracking-tight sm:text-5xl">
+            <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight sm:text-5xl">
               Deine Box steht 50 Wochen im Jahr still.
             </h2>
-            <p className="mt-5 text-lg leading-relaxed text-cream/75">
+            <p className="mt-5 text-base leading-relaxed text-white/75">
               Mach Stauraum, den du selten brauchst, zu einem kleinen Nebenverdienst.
               Du bestimmst Preis, Verfügbarkeit und an wen du vermietest.
             </p>
             <Link
               href="/vermieten"
-              className="group mt-8 inline-flex items-center gap-2 rounded-full bg-cream px-6 py-3.5 text-sm font-semibold text-ink transition-transform hover:-translate-y-px"
+              className="group mt-8 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3.5 text-sm font-bold text-ink transition-opacity hover:opacity-90"
             >
               Jetzt Box anbieten
               <ArrowRight size={16} className="transition-transform duration-200 group-hover:translate-x-0.5" />
             </Link>
 
-            <div className="mt-8 flex flex-wrap gap-x-5 gap-y-2 text-xs text-cream/70">
+            <div className="mt-8 flex flex-wrap gap-x-5 gap-y-2 text-xs text-white/70">
               <span className="inline-flex items-center gap-1.5">
                 <ShieldCheck size={13} />
                 Sichere Zahlung über Stripe
