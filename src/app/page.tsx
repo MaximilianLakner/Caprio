@@ -59,10 +59,10 @@ export default async function HomePage() {
             ))}
           </div>
 
-          {/* Search bar */}
+          {/* Search — desktop & up: long pill bar */}
           <form
             action="/dachboxen"
-            className="mt-5 flex w-full items-center gap-2 rounded-full border border-ink bg-white p-1.5 pl-5 shadow-md focus-within:border-ink sm:mt-6"
+            className="mt-6 hidden w-full items-center gap-2 rounded-full border border-ink bg-white p-1.5 pl-5 shadow-md focus-within:border-ink sm:flex"
           >
             <MapPin size={18} className="shrink-0 text-taupe-500" />
             <input
@@ -77,7 +77,30 @@ export default async function HomePage() {
               className="inline-flex shrink-0 items-center gap-2 rounded-full bg-clay-600 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-clay-500"
             >
               <Search size={15} />
-              <span className="hidden sm:inline">Suchen</span>
+              Suchen
+            </button>
+          </form>
+
+          {/* Search — mobile: stacked card (input over a full-width button) */}
+          <form
+            action="/dachboxen"
+            className="mt-5 rounded-lg border border-line bg-white p-4 text-left shadow-md focus-within:border-ink sm:hidden"
+          >
+            <div className="flex items-center gap-3 border-b border-line pb-3">
+              <Search size={20} className="shrink-0 text-ink" />
+              <input
+                type="text"
+                name="ort"
+                placeholder="Stadt oder PLZ eingeben …"
+                aria-label="Stadt oder Postleitzahl"
+                className="w-full bg-transparent py-1 text-base text-ink outline-none placeholder:text-taupe-500"
+              />
+            </div>
+            <button
+              type="submit"
+              className="mt-4 w-full rounded-full bg-[#00aa6c] py-3.5 text-base font-semibold text-ink transition-opacity hover:opacity-90"
+            >
+              Suchen
             </button>
           </form>
         </div>
