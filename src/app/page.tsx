@@ -10,6 +10,7 @@ import {
   MapPin,
 } from "lucide-react";
 import { BoxCard } from "@/components/box-card";
+import { Faq } from "@/components/faq";
 import { Reveal } from "@/components/reveal";
 import { createClient } from "@/lib/supabase/server";
 import { mapBoxRow } from "@/lib/data";
@@ -36,7 +37,7 @@ export default async function HomePage() {
           </h1>
 
           {/* Tripadvisor-style tab row */}
-          <div className="mt-7 flex items-center justify-center gap-0 border-b border-taupe-200">
+          <div className="mt-7 flex items-center justify-center gap-2">
             {[
               { label: "Dachboxen", href: "/dachboxen" },
               { label: "Vermieten", href: "/vermieten" },
@@ -44,13 +45,13 @@ export default async function HomePage() {
               <Link
                 key={label}
                 href={href}
-                className={`group relative px-6 pb-3 pt-1 text-sm font-semibold transition-colors ${
+                className={`group relative px-5 pb-2 pt-1 text-sm font-semibold transition-colors ${
                   i === 0 ? "text-ink" : "text-taupe-500 hover:text-ink"
                 }`}
               >
                 {label}
                 <span
-                  className={`absolute inset-x-4 -bottom-px h-0.5 rounded-full bg-ink transition-transform duration-150 ${
+                  className={`absolute inset-x-4 bottom-0 h-0.5 rounded-full bg-ink transition-transform duration-150 ${
                     i === 0 ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
                   }`}
                 />
@@ -122,7 +123,7 @@ export default async function HomePage() {
       </section>
 
       {/* ---------------------------------------------------------- Brand strip */}
-      <section className="border-y border-taupe-100 bg-cream">
+      <section className="bg-cream">
         <div className="mx-auto max-w-6xl px-4 py-8 sm:px-8">
           <p className="text-center text-xs font-semibold uppercase tracking-wider text-taupe-500">
             Boxen von Marken, denen Reisende vertrauen
@@ -142,44 +143,42 @@ export default async function HomePage() {
 
       {/* ------------------------------------------------------ Featured boxes */}
       {featured.length > 0 && (
-        <section className="mx-auto max-w-7xl px-4 py-12 sm:px-8">
-          <Reveal className="flex items-end justify-between gap-4">
-            <div>
-              <h2 className="font-display text-2xl font-bold tracking-tight text-ink sm:text-3xl">
-                Unverzichtbare Dachboxen in deiner Nähe
-              </h2>
-              <p className="mt-1 text-sm text-taupe-500">Angebote, die dir gefallen werden</p>
-            </div>
-            <Link
-              href="/dachboxen"
-              className="group hidden shrink-0 items-center gap-1.5 text-sm font-semibold text-clay-600 transition-colors hover:text-clay-500 sm:inline-flex"
-            >
-              Alle ansehen
-              <ArrowRight size={16} className="transition-transform duration-200 group-hover:translate-x-0.5" />
-            </Link>
-          </Reveal>
+        <section className="py-12">
+          <div className="mx-auto max-w-7xl px-4 sm:px-8">
+            <h2 className="font-display text-2xl font-bold tracking-tight text-ink sm:text-3xl">
+              Unverzichtbare Dachboxen in deiner Nähe
+            </h2>
+            <p className="mt-1 text-sm text-taupe-500">Angebote, die dir gefallen werden</p>
+          </div>
 
-          <div className="mt-7 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {featured.map((box, i) => (
-              <Reveal key={box.id} delay={i * 80}>
+          {/* horizontal scroller */}
+          <div className="mt-7 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:px-8">
+            {featured.map((box) => (
+              <div
+                key={box.id}
+                className="w-[72vw] max-w-[280px] shrink-0 snap-start sm:w-[280px]"
+              >
                 <BoxCard box={box} />
-              </Reveal>
+              </div>
             ))}
           </div>
 
-          <Link
-            href="/dachboxen"
-            className="group mt-8 inline-flex items-center gap-1.5 text-sm font-semibold text-clay-600 hover:text-clay-500 sm:hidden"
-          >
-            Alle ansehen
-            <ArrowRight size={16} className="transition-transform duration-200 group-hover:translate-x-0.5" />
-          </Link>
+          {/* CTA button to the full listing page */}
+          <div className="mx-auto mt-6 flex max-w-7xl justify-center px-4 sm:justify-start sm:px-8">
+            <Link
+              href="/dachboxen"
+              className="group inline-flex items-center gap-2 rounded-full border border-ink px-6 py-3 text-sm font-semibold text-ink transition-colors hover:bg-ink hover:text-white"
+            >
+              Alle Dachboxen ansehen
+              <ArrowRight size={16} className="transition-transform duration-200 group-hover:translate-x-0.5" />
+            </Link>
+          </div>
         </section>
       )}
 
       {/* --------------------------------------------------------- Trust strip */}
-      <section className="border-y border-taupe-100 bg-white">
-        <div className="mx-auto grid max-w-7xl gap-0 px-4 sm:grid-cols-3 sm:px-8">
+      <section className="bg-white">
+        <div className="mx-auto grid max-w-7xl gap-x-6 px-4 sm:grid-cols-3 sm:px-8">
           {[
             {
               icon: Wallet,
@@ -200,7 +199,7 @@ export default async function HomePage() {
             <Reveal
               key={title}
               delay={i * 90}
-              className="flex gap-4 border-b border-taupe-100 px-4 py-8 last:border-b-0 sm:border-b-0 sm:border-r sm:last:border-r-0 sm:px-8"
+              className="flex gap-4 py-6 sm:py-8"
             >
               <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-blush-100">
                 <Icon size={18} className="text-clay-600" />
@@ -315,6 +314,21 @@ export default async function HomePage() {
               </span>
             </div>
           </Reveal>
+        </div>
+      </section>
+
+      {/* --------------------------------------------------------------- FAQ */}
+      <section className="bg-white">
+        <div className="mx-auto max-w-3xl px-4 py-14 sm:px-8 sm:py-16">
+          <h2 className="font-display text-2xl font-bold tracking-tight text-ink sm:text-3xl">
+            Häufige Fragen
+          </h2>
+          <p className="mt-1 text-sm text-taupe-500">
+            Alles, was du vor deiner ersten Buchung wissen musst.
+          </p>
+          <div className="mt-6">
+            <Faq />
+          </div>
         </div>
       </section>
     </>

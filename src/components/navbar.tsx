@@ -36,7 +36,7 @@ export function Navbar({ user }: { user: NavUser }) {
   useEffect(() => setMenuOpen(false), [pathname]);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-line/60 bg-white">
+    <header className="sticky top-0 z-50 bg-white">
       <nav className="relative mx-auto flex h-16 max-w-7xl items-center justify-between px-5 sm:px-8">
         {/* Logo */}
         <Link href="/" className="flex items-center" onClick={() => setOpen(false)}>
@@ -53,7 +53,7 @@ export function Navbar({ user }: { user: NavUser }) {
         {/* Desktop nav links — centered, Tripadvisor-style underline */}
         <div className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-7 md:flex">
           {NAV_LINKS.map((link) => {
-            const active = pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href));
+            const active = pathname === link.href || pathname.startsWith(`${link.href}/`);
             return (
               <Link
                 key={link.href}
@@ -171,7 +171,7 @@ export function Navbar({ user }: { user: NavUser }) {
 
       {/* Mobile drawer */}
       {open && (
-        <div className="border-t border-line/60 bg-white px-5 pb-6 pt-2 md:hidden">
+        <div className="bg-white px-5 pb-6 pt-2 shadow-lg md:hidden">
           <div className="flex flex-col">
             {NAV_LINKS.map((link) => (
               <Link
