@@ -190,7 +190,7 @@ export function BrowseClient({
             Finde deine Dachbox
           </h1>
         </div>
-        <div className="mt-10 rounded-2xl border border-dashed border-taupe-300 bg-paper/40 px-6 py-20 text-center">
+        <div className="mt-10 rounded-lg border border-dashed border-taupe-300 bg-paper/40 px-6 py-20 text-center">
           <p className="font-display text-xl font-semibold">
             Noch keine Dachboxen inseriert
           </p>
@@ -224,7 +224,7 @@ export function BrowseClient({
       <div className="mt-10 flex flex-col gap-10 lg:flex-row">
         {/* sidebar — desktop */}
         <aside className="hidden w-72 shrink-0 lg:block">
-          <div className="sticky top-24 rounded-2xl border border-line bg-paper/40 p-6">
+          <div className="sticky top-24 rounded-lg border border-line bg-paper/40 p-6">
             {filterPanel}
           </div>
         </aside>
@@ -270,7 +270,7 @@ export function BrowseClient({
               ))}
             </div>
           ) : (
-            <div className="rounded-2xl border border-dashed border-taupe-300 bg-paper/40 px-6 py-20 text-center">
+            <div className="rounded-lg border border-dashed border-taupe-300 bg-paper/40 px-6 py-20 text-center">
               <p className="font-display text-xl font-semibold">
                 Keine Box passt zu diesen Filtern
               </p>

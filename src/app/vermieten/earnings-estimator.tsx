@@ -12,7 +12,7 @@ export function EarningsEstimator() {
   const net = Math.round(gross * HOST_SHARE);
 
   return (
-    <div className="rounded-3xl border border-line bg-cream p-7 shadow-[0_18px_50px_-32px_rgba(42,36,33,0.4)] sm:p-9">
+    <div className="rounded-xl border border-line bg-cream p-7 shadow-[0_18px_50px_-32px_rgba(42,36,33,0.4)] sm:p-9">
       <div className="grid gap-8 sm:grid-cols-2">
         <div>
           <div className="flex items-center justify-between">
@@ -55,7 +55,7 @@ export function EarningsEstimator() {
         </div>
       </div>
 
-      <div className="mt-8 flex flex-col items-center gap-1 rounded-2xl bg-ink p-7 text-center text-cream">
+      <div className="mt-8 flex flex-col items-center gap-1 rounded-lg bg-ink p-7 text-center text-cream">
         <p className="text-sm text-cream/70">Geschätzter Verdienst pro Jahr</p>
         <p className="font-display text-5xl font-semibold">
           {net.toLocaleString("de-DE")} €

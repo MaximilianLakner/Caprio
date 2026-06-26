@@ -60,7 +60,7 @@ export function AuthForm({ redirectTo }: { redirectTo?: string }) {
         </div>
       )}
 
-      <div className="mt-6 rounded-2xl border border-line bg-cream p-6 shadow-[0_18px_50px_-32px_rgba(42,36,33,0.25)]">
+      <div className="mt-6 rounded-lg border border-line bg-cream p-6 shadow-[0_18px_50px_-32px_rgba(42,36,33,0.25)]">
         {mode !== "forgot" && (
           <>
             <div className="space-y-2.5">

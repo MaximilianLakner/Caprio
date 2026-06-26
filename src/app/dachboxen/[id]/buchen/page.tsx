@@ -78,7 +78,7 @@ export default async function BuchenPage({
 
       <div className="mt-8 space-y-3">
         {/* Box + host */}
-        <div className="rounded-2xl border border-line bg-cream p-5">
+        <div className="rounded-lg border border-line bg-cream p-5">
           <h2 className="font-display text-lg font-semibold">{box.title}</h2>
           <div className="mt-3 space-y-2 text-sm text-ink-soft">
             <p className="flex items-center gap-2">
@@ -100,7 +100,7 @@ export default async function BuchenPage({
         </div>
 
         {/* Price */}
-        <div className="rounded-2xl border border-line bg-cream p-5">
+        <div className="rounded-lg border border-line bg-cream p-5">
           <div className="flex items-center justify-between text-sm text-ink-soft">
             <span>
               {Number(box.price_per_day)} € × {days} {days === 1 ? "Tag" : "Tage"}
@@ -118,7 +118,7 @@ export default async function BuchenPage({
         </div>
 
         {/* Trust */}
-        <div className="flex items-start gap-2 rounded-2xl border border-line bg-paper/40 p-4 text-sm text-ink-soft">
+        <div className="flex items-start gap-2 rounded-lg border border-line bg-paper/40 p-4 text-sm text-ink-soft">
           <ShieldCheck size={16} className="mt-0.5 shrink-0 text-clay-600" />
           Kostenlose Stornierung bis 48 Stunden vor Abholung. Dein Geld wird bis
           zur Übergabe sicher gehalten.
@@ -126,11 +126,11 @@ export default async function BuchenPage({
 
         {/* Pay */}
         {payout.payoutsEnabled ? (
-          <div className="rounded-2xl border border-line bg-cream p-5">
+          <div className="rounded-lg border border-line bg-cream p-5">
             <ReviewForm boxId={box.id} from={from} to={to} />
           </div>
         ) : (
-          <p className="rounded-2xl border border-dashed border-taupe-300 bg-paper/40 p-5 text-sm text-ink-soft">
+          <p className="rounded-lg border border-dashed border-taupe-300 bg-paper/40 p-5 text-sm text-ink-soft">
             Diese Box ist gerade nicht buchbar – der Vermieter hat seine
             Auszahlungen noch nicht eingerichtet.
           </p>

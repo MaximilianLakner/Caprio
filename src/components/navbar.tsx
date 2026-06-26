@@ -24,7 +24,6 @@ export function Navbar({ user }: { user: NavUser }) {
 
   const displayName = user?.name ?? user?.email?.split("@")[0] ?? "";
 
-  // close the avatar dropdown on outside click / route change
   useEffect(() => {
     function onClick(e: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
@@ -37,8 +36,9 @@ export function Navbar({ user }: { user: NavUser }) {
   useEffect(() => setMenuOpen(false), [pathname]);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-line/70 bg-cream/80 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b border-line/60 bg-white">
       <nav className="relative mx-auto flex h-16 max-w-7xl items-center justify-between px-5 sm:px-8">
+        {/* Logo */}
         <Link href="/" className="flex items-center" onClick={() => setOpen(false)}>
           <Image
             src="/logo.png"
@@ -50,18 +50,18 @@ export function Navbar({ user }: { user: NavUser }) {
           />
         </Link>
 
-        {/* desktop nav links — absolutely centred in the bar */}
-        <div className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-1 md:flex">
+        {/* Desktop nav links — centered, Tripadvisor-style underline */}
+        <div className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-7 md:flex">
           {NAV_LINKS.map((link) => {
-            const active = pathname.startsWith(link.href);
+            const active = pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href));
             return (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                className={`relative py-1 text-sm font-medium transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:rounded-full after:bg-ink after:transition-transform after:duration-150 ${
                   active
-                    ? "bg-paper text-ink"
-                    : "text-ink-soft hover:bg-paper/70 hover:text-ink"
+                    ? "text-ink after:scale-x-100"
+                    : "text-ink-soft after:scale-x-0 hover:text-ink hover:after:scale-x-100"
                 }`}
               >
                 {link.label}
@@ -70,32 +70,31 @@ export function Navbar({ user }: { user: NavUser }) {
           })}
         </div>
 
-        {/* desktop auth / actions */}
+        {/* Desktop auth */}
         <div className="hidden items-center gap-3 md:flex">
           {user ? (
             <>
               <Link
                 href="/vermieten/inserat"
-                className="inline-flex items-center gap-1.5 rounded-full bg-ink px-4 py-2 text-sm font-medium text-cream transition-transform hover:-translate-y-px hover:bg-ink/90"
+                className="inline-flex items-center gap-1.5 rounded-full bg-ink px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90"
               >
                 <Plus size={16} />
                 Dachbox hinzufügen
               </Link>
 
-              {/* avatar + dropdown */}
               <div className="relative" ref={menuRef}>
                 <button
                   type="button"
                   onClick={() => setMenuOpen((v) => !v)}
                   aria-label="Profilmenü"
                   aria-expanded={menuOpen}
-                  className="rounded-full ring-offset-2 ring-offset-cream transition hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-ink"
+                  className="rounded-full ring-offset-2 ring-offset-white transition hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-ink"
                 >
                   <Avatar name={user.name} email={user.email} src={user.avatarUrl} className="h-10 w-10" />
                 </button>
 
                 {menuOpen && (
-                  <div className="absolute right-0 top-full mt-2 w-60 overflow-hidden rounded-2xl border border-line bg-cream shadow-[0_18px_50px_-20px_rgba(17,53,29,0.35)]">
+                  <div className="absolute right-0 top-full mt-2 w-60 overflow-hidden rounded-lg border border-line bg-white shadow-lg">
                     <div className="flex items-center gap-3 border-b border-line px-4 py-3.5">
                       <Avatar name={user.name} email={user.email} src={user.avatarUrl} className="h-10 w-10" />
                       <div className="min-w-0">
@@ -104,33 +103,26 @@ export function Navbar({ user }: { user: NavUser }) {
                       </div>
                     </div>
                     <div className="p-1.5">
-                      <Link
-                        href="/profil"
-                        className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-ink transition-colors hover:bg-paper"
-                      >
-                        <Settings size={16} className="text-ink-soft" />
-                        Profil bearbeiten
-                      </Link>
-                      <Link
-                        href="/meine-boxen"
-                        className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-ink transition-colors hover:bg-paper"
-                      >
-                        <Package size={16} className="text-ink-soft" />
-                        Meine Boxen
-                      </Link>
-                      <Link
-                        href="/meine-buchungen"
-                        className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-ink transition-colors hover:bg-paper"
-                      >
-                        <CalendarCheck size={16} className="text-ink-soft" />
-                        Meine Buchungen
-                      </Link>
+                      {[
+                        { href: "/profil", icon: Settings, label: "Profil bearbeiten" },
+                        { href: "/meine-boxen", icon: Package, label: "Meine Boxen" },
+                        { href: "/meine-buchungen", icon: CalendarCheck, label: "Meine Buchungen" },
+                      ].map(({ href, icon: Icon, label }) => (
+                        <Link
+                          key={href}
+                          href={href}
+                          className="flex items-center gap-2.5 rounded-md px-3 py-2.5 text-sm font-medium text-ink transition-colors hover:bg-cream"
+                        >
+                          <Icon size={16} className="text-ink-soft" />
+                          {label}
+                        </Link>
+                      ))}
                     </div>
                     <div className="border-t border-line p-1.5">
                       <form action={signOut}>
                         <button
                           type="submit"
-                          className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-ink transition-colors hover:bg-paper"
+                          className="flex w-full items-center gap-2.5 rounded-md px-3 py-2.5 text-sm font-medium text-ink transition-colors hover:bg-cream"
                         >
                           <LogOut size={16} className="text-ink-soft" />
                           Abmelden
@@ -145,13 +137,13 @@ export function Navbar({ user }: { user: NavUser }) {
             <>
               <Link
                 href="/anmelden"
-                className="rounded-full px-4 py-2 text-sm font-medium text-ink-soft transition-colors hover:text-ink"
+                className="text-sm font-medium text-ink-soft transition-colors hover:text-ink"
               >
                 Anmelden
               </Link>
               <Link
                 href="/dachboxen"
-                className="rounded-full bg-ink px-4 py-2 text-sm font-medium text-cream transition-transform hover:-translate-y-px hover:bg-ink/90"
+                className="rounded-full bg-ink px-4 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90"
               >
                 Box finden
               </Link>
@@ -159,7 +151,7 @@ export function Navbar({ user }: { user: NavUser }) {
           )}
         </div>
 
-        {/* mobile right side */}
+        {/* Mobile right */}
         <div className="flex items-center gap-2 md:hidden">
           {user && (
             <Link href="/profil" aria-label="Profil" onClick={() => setOpen(false)}>
@@ -170,16 +162,16 @@ export function Navbar({ user }: { user: NavUser }) {
             type="button"
             aria-label="Menü"
             onClick={() => setOpen((v) => !v)}
-            className="rounded-full p-2 text-ink"
+            className="p-2 text-ink"
           >
             {open ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
       </nav>
 
-      {/* mobile drawer */}
+      {/* Mobile drawer */}
       {open && (
-        <div className="border-t border-line/70 bg-cream px-5 pb-6 pt-2 md:hidden">
+        <div className="border-t border-line/60 bg-white px-5 pb-6 pt-2 md:hidden">
           <div className="flex flex-col">
             {NAV_LINKS.map((link) => (
               <Link
@@ -193,27 +185,20 @@ export function Navbar({ user }: { user: NavUser }) {
             ))}
             {user && (
               <>
-                <Link
-                  href="/profil"
-                  onClick={() => setOpen(false)}
-                  className="border-b border-line/60 py-3 text-base font-medium text-ink"
-                >
-                  Profil bearbeiten
-                </Link>
-                <Link
-                  href="/meine-boxen"
-                  onClick={() => setOpen(false)}
-                  className="border-b border-line/60 py-3 text-base font-medium text-ink"
-                >
-                  Meine Boxen
-                </Link>
-                <Link
-                  href="/meine-buchungen"
-                  onClick={() => setOpen(false)}
-                  className="border-b border-line/60 py-3 text-base font-medium text-ink"
-                >
-                  Meine Buchungen
-                </Link>
+                {[
+                  { href: "/profil", label: "Profil bearbeiten" },
+                  { href: "/meine-boxen", label: "Meine Boxen" },
+                  { href: "/meine-buchungen", label: "Meine Buchungen" },
+                ].map(({ href, label }) => (
+                  <Link
+                    key={href}
+                    href={href}
+                    onClick={() => setOpen(false)}
+                    className="border-b border-line/60 py-3 text-base font-medium text-ink"
+                  >
+                    {label}
+                  </Link>
+                ))}
               </>
             )}
           </div>
@@ -223,7 +208,7 @@ export function Navbar({ user }: { user: NavUser }) {
                 <Link
                   href="/vermieten/inserat"
                   onClick={() => setOpen(false)}
-                  className="inline-flex items-center justify-center gap-1.5 rounded-full bg-ink px-4 py-3 text-sm font-medium text-cream"
+                  className="inline-flex items-center justify-center gap-1.5 rounded-full bg-ink px-4 py-3 text-sm font-medium text-white"
                 >
                   <Plus size={16} />
                   Dachbox hinzufügen
@@ -249,7 +234,7 @@ export function Navbar({ user }: { user: NavUser }) {
                 <Link
                   href="/dachboxen"
                   onClick={() => setOpen(false)}
-                  className="rounded-full bg-ink px-4 py-3 text-center text-sm font-medium text-cream"
+                  className="rounded-full bg-ink px-4 py-3 text-center text-sm font-medium text-white"
                 >
                   Box finden
                 </Link>

@@ -73,7 +73,7 @@ export default async function MeineBoxenPage() {
 
       {/* Listings */}
       {!listings || listings.length === 0 ? (
-        <div className="mt-10 rounded-2xl border border-dashed border-taupe-300 bg-paper/40 px-6 py-20 text-center">
+        <div className="mt-10 rounded-lg border border-dashed border-taupe-300 bg-paper/40 px-6 py-20 text-center">
           <p className="font-display text-xl font-semibold">
             Noch keine Boxen inseriert
           </p>
@@ -93,7 +93,7 @@ export default async function MeineBoxenPage() {
           {listings.map((listing) => (
             <div
               key={listing.id}
-              className="overflow-hidden rounded-2xl border border-line bg-cream"
+              className="overflow-hidden rounded-lg border border-line bg-cream"
             >
               <Link
                 href={`/dachboxen/${listing.id}`}
@@ -192,7 +192,7 @@ export default async function MeineBoxenPage() {
               return (
                 <div
                   key={b.id}
-                  className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-line bg-cream p-4"
+                  className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-line bg-cream p-4"
                 >
                   <div>
                     <p className="font-semibold">{box?.title ?? "Dachbox"}</p>

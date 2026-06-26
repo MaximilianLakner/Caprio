@@ -131,7 +131,7 @@ export default function SoFunktioniertsPage() {
         <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {renterSteps.map((step, i) => (
             <Reveal key={step.title} delay={i * 80} className="relative">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-line bg-cream">
+              <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-line bg-cream">
                 <step.icon size={20} className="text-clay-600" />
               </div>
               <p className="mt-4 font-display text-sm font-semibold text-taupe-500">
@@ -169,9 +169,9 @@ export default function SoFunktioniertsPage() {
               <Reveal
                 key={step.title}
                 delay={i * 80}
-                className="rounded-3xl border border-line bg-cream p-6"
+                className="rounded-xl border border-line bg-cream p-6"
               >
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blush-100">
+                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blush-100">
                   <step.icon size={20} className="text-clay-600" />
                 </div>
                 <p className="mt-4 font-display text-sm font-semibold text-taupe-500">
@@ -218,7 +218,7 @@ export default function SoFunktioniertsPage() {
             <Reveal
               key={title}
               delay={i * 90}
-              className="rounded-3xl border border-line bg-paper/40 p-7"
+              className="rounded-xl border border-line bg-paper/40 p-7"
             >
               <Icon size={22} className="text-clay-600" />
               <h3 className="mt-4 text-lg font-semibold">{title}</h3>
@@ -237,7 +237,7 @@ export default function SoFunktioniertsPage() {
           {faqs.map((faq, i) => (
             <Reveal key={faq.q} delay={i * 70}>
             <details
-              className="group rounded-2xl border border-line bg-cream px-6 py-5 transition-colors hover:border-taupe-300 [&_summary::-webkit-details-marker]:hidden"
+              className="group rounded-lg border border-line bg-cream px-6 py-5 transition-colors hover:border-taupe-300 [&_summary::-webkit-details-marker]:hidden"
             >
               <summary className="flex cursor-pointer items-center justify-between gap-4 font-semibold">
                 {faq.q}

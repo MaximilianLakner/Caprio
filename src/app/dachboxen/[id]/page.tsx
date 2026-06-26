@@ -183,7 +183,7 @@ export default async function BoxDetailPage({
             {specs.map(({ icon: Icon, label, value }) => (
               <div
                 key={label}
-                className="rounded-2xl border border-line bg-paper/40 p-4"
+                className="rounded-lg border border-line bg-paper/40 p-4"
               >
                 <Icon size={18} className="text-clay-600" />
                 <p className="mt-3 text-xs uppercase tracking-wide text-taupe-700">
@@ -196,7 +196,7 @@ export default async function BoxDetailPage({
 
           {/* mounting */}
           {box.mounting && (
-            <div className="mt-4 flex items-center gap-2.5 rounded-2xl border border-line bg-paper/40 p-4 text-sm">
+            <div className="mt-4 flex items-center gap-2.5 rounded-lg border border-line bg-paper/40 p-4 text-sm">
               <Wrench size={18} className="shrink-0 text-clay-600" />
               <span className="text-taupe-700">Befestigungsart:</span>
               <span className="font-medium">{box.mounting}</span>
@@ -229,7 +229,7 @@ export default async function BoxDetailPage({
           )}
 
           {/* host */}
-          <div className="mt-10 flex items-center gap-4 rounded-3xl border border-line bg-paper/40 p-6">
+          <div className="mt-10 flex items-center gap-4 rounded-xl border border-line bg-paper/40 p-6">
             <span className="flex h-14 w-14 items-center justify-center rounded-full bg-taupe-200 font-display text-xl font-semibold text-ink">
               {box.host.charAt(0)}
             </span>

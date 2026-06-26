@@ -20,7 +20,7 @@ export default function PasswortNeuPage() {
         </p>
       </div>
 
-      <div className="mt-8 rounded-2xl border border-line bg-cream p-6 shadow-[0_18px_50px_-32px_rgba(42,36,33,0.25)]">
+      <div className="mt-8 rounded-lg border border-line bg-cream p-6 shadow-[0_18px_50px_-32px_rgba(42,36,33,0.25)]">
         <UpdatePasswordForm />
       </div>
     </div>

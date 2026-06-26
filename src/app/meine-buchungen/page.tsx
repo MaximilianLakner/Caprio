@@ -59,7 +59,7 @@ export default async function MeineBuchungenPage({
       </div>
 
       {status === "erfolg" && (
-        <p className="mt-6 flex items-start gap-2 rounded-2xl bg-blush-100 p-4 text-sm text-clay-600">
+        <p className="mt-6 flex items-start gap-2 rounded-lg bg-blush-100 p-4 text-sm text-clay-600">
           <CheckCircle2 size={16} className="mt-0.5 shrink-0" />
           Zahlung erfolgreich! Deine Buchung ist bestätigt. Den Treffpunkt klärst
           du jetzt direkt mit dem Vermieter.
@@ -67,7 +67,7 @@ export default async function MeineBuchungenPage({
       )}
 
       {!bookings || bookings.length === 0 ? (
-        <div className="mt-10 rounded-2xl border border-dashed border-taupe-300 bg-paper/40 px-6 py-20 text-center">
+        <div className="mt-10 rounded-lg border border-dashed border-taupe-300 bg-paper/40 px-6 py-20 text-center">
           <p className="font-display text-xl font-semibold">Noch keine Buchungen</p>
           <p className="mt-2 text-ink-soft">
             Finde eine Dachbox und sichere dir deinen Reisezeitraum.
@@ -90,7 +90,7 @@ export default async function MeineBuchungenPage({
             return (
               <div
                 key={b.id}
-                className="rounded-2xl border border-line bg-cream p-5"
+                className="rounded-lg border border-line bg-cream p-5"
               >
                 <div className="flex flex-wrap items-center justify-between gap-4">
                   <div className="min-w-0">

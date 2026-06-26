@@ -8,10 +8,6 @@ import {
   Sparkles,
   Search,
   MapPin,
-  Heart,
-  Star,
-  Box,
-  Tag,
 } from "lucide-react";
 import { BoxCard } from "@/components/box-card";
 import { Reveal } from "@/components/reveal";
@@ -19,13 +15,6 @@ import { createClient } from "@/lib/supabase/server";
 import { mapBoxRow } from "@/lib/data";
 
 const BRANDS = ["Thule", "Kamei", "Hapro", "Yakima", "Atera", "Jetbag"];
-
-const CATEGORIES = [
-  { label: "Alle", icon: Search, href: "/dachboxen" },
-  { label: "Dachboxen", icon: Box, href: "/dachboxen?typ=box" },
-  { label: "Angebote", icon: Tag, href: "/dachboxen?sort=preis_asc" },
-  { label: "Vermieten", icon: Sparkles, href: "/vermieten" },
-];
 
 export default async function HomePage() {
   const supabase = await createClient();
@@ -46,20 +35,25 @@ export default async function HomePage() {
             Welche Dachbox brauchst du?
           </h1>
 
-          {/* Category tabs */}
-          <div className="mt-7 flex flex-wrap items-center justify-center gap-1 sm:gap-2">
-            {CATEGORIES.map(({ label, icon: Icon, href }, i) => (
+          {/* Tripadvisor-style tab row */}
+          <div className="mt-7 flex items-center justify-center gap-0 border-b border-taupe-200">
+            {[
+              { label: "Dachboxen", href: "/dachboxen" },
+              { label: "Vermieten", href: "/vermieten" },
+            ].map(({ label, href }, i) => (
               <Link
                 key={label}
                 href={href}
-                className={`inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
-                  i === 0
-                    ? "border-ink bg-ink text-white"
-                    : "border-taupe-200 bg-white text-ink hover:border-clay-600 hover:text-clay-600"
+                className={`group relative px-6 pb-3 pt-1 text-sm font-semibold transition-colors ${
+                  i === 0 ? "text-ink" : "text-taupe-500 hover:text-ink"
                 }`}
               >
-                <Icon size={15} />
                 {label}
+                <span
+                  className={`absolute inset-x-4 -bottom-px h-0.5 rounded-full bg-ink transition-transform duration-150 ${
+                    i === 0 ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+                  }`}
+                />
               </Link>
             ))}
           </div>
@@ -91,7 +85,7 @@ export default async function HomePage() {
       {/* --------------------------------------------------------- Promo card */}
       <section className="bg-white px-4 pb-10 sm:px-8">
         <div className="mx-auto max-w-5xl">
-          <div className="relative overflow-hidden rounded-2xl bg-[#00aa6c] sm:flex sm:min-h-[280px]">
+          <div className="relative overflow-hidden rounded-lg bg-[#00aa6c] sm:flex sm:min-h-[280px]">
             {/* text side */}
             <div className="flex flex-col justify-center p-8 sm:w-1/2 sm:p-12">
               <h2 className="font-display text-[1.75rem] font-bold leading-tight text-ink sm:text-[2rem]">
@@ -108,7 +102,7 @@ export default async function HomePage() {
                 <ArrowRight size={15} />
               </Link>
             </div>
-            {/* image side */}
+            {/* image side with gradient fade into green */}
             <div className="relative h-48 sm:h-auto sm:w-1/2">
               <Image
                 src="/dachbox-hero.jpg"
@@ -118,6 +112,10 @@ export default async function HomePage() {
                 sizes="(max-width: 640px) 100vw, 50vw"
                 className="object-cover"
               />
+              {/* horizontal fade: left edge blends into the green panel */}
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#00aa6c] via-[#00aa6c]/20 to-transparent" />
+              {/* vertical fade on mobile: top edge blends upward */}
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#00aa6c] via-[#00aa6c]/20 to-transparent sm:hidden" />
             </div>
           </div>
         </div>
@@ -247,7 +245,7 @@ export default async function HomePage() {
               <Reveal
                 key={step.n}
                 delay={i * 90}
-                className="rounded-2xl border border-taupe-100 bg-white p-7"
+                className="rounded-lg border border-taupe-100 bg-white p-7"
               >
                 <span className="font-display text-3xl font-bold text-taupe-200">
                   {step.n}
@@ -272,7 +270,7 @@ export default async function HomePage() {
 
       {/* --------------------------------------------------------- Host CTA */}
       <section className="mx-auto max-w-7xl px-4 py-14 sm:px-8">
-        <div className="relative overflow-hidden rounded-3xl px-8 py-16 text-white shadow-xl sm:px-14 sm:py-20">
+        <div className="relative overflow-hidden rounded-xl px-8 py-16 text-white shadow-xl sm:px-14 sm:py-20">
           <Image
             src="/road.jpg"
             alt="Auto mit Dachbox auf einer Bergstraße durch den Wald"

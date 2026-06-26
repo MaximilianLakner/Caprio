@@ -51,7 +51,7 @@ export function BookingCard({
   }
 
   return (
-    <div className="rounded-3xl border border-line bg-cream p-6 shadow-[0_18px_50px_-30px_rgba(42,36,33,0.4)]">
+    <div className="rounded-xl border border-line bg-cream p-6 shadow-[0_18px_50px_-30px_rgba(42,36,33,0.4)]">
       <div className="flex items-baseline justify-between">
         <p>
           <span className="font-display text-3xl font-semibold">{pricePerDay} €</span>
@@ -70,7 +70,7 @@ export function BookingCard({
         )}
       </div>
 
-      <div className="mt-5 grid grid-cols-2 overflow-hidden rounded-2xl border border-line">
+      <div className="mt-5 grid grid-cols-2 overflow-hidden rounded-lg border border-line">
         <label className="border-r border-line p-3">
           <span className="text-[11px] font-semibold uppercase tracking-wide text-taupe-700">
             Von

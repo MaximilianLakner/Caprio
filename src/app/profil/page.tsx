@@ -55,7 +55,7 @@ export default async function ProfilPage({
         </p>
       </div>
 
-      <div className="rounded-2xl border border-line bg-cream p-6 sm:p-8">
+      <div className="rounded-lg border border-line bg-cream p-6 sm:p-8">
         <ProfileForm
           firstName={firstName ?? ""}
           lastName={lastName}
@@ -66,7 +66,7 @@ export default async function ProfilPage({
       </div>
 
       {/* Payouts / Stripe Connect */}
-      <div className="mt-6 rounded-2xl border border-line bg-cream p-6">
+      <div className="mt-6 rounded-lg border border-line bg-cream p-6">
         <div className="flex items-start gap-3">
           <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blush-100">
             <Banknote size={18} className="text-clay-600" />
@@ -115,7 +115,7 @@ export default async function ProfilPage({
       {/* Uploaded boxes shortcut */}
       <Link
         href="/meine-boxen"
-        className="mt-6 flex items-center justify-between rounded-2xl border border-line bg-cream p-5 transition-colors hover:border-taupe-300"
+        className="mt-6 flex items-center justify-between rounded-lg border border-line bg-cream p-5 transition-colors hover:border-taupe-300"
       >
         <div className="flex items-center gap-3">
           <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-blush-100">
