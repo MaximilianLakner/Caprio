@@ -15,6 +15,8 @@ import {
   ShieldCheck,
   HeartHandshake,
   Receipt,
+  Leaf,
+  Star,
 } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -69,6 +71,24 @@ const hostSteps = [
   },
 ];
 
+const trustPoints = [
+  {
+    icon: ShieldCheck,
+    title: "Vertrauen zuerst",
+    text: "Verifizierte Profile und beidseitige Bewertungen sorgen dafür, dass beide Seiten wissen, mit wem sie es zu tun haben.",
+  },
+  {
+    icon: HeartHandshake,
+    title: "Persönliche Übergabe",
+    text: "Kein anonymer Versand – ihr trefft euch, die Box wird erklärt, Fragen werden direkt geklärt.",
+  },
+  {
+    icon: Receipt,
+    title: "Faire, klare Preise",
+    text: "Vermieter:innen setzen ihren Tagespreis selbst. Keine versteckten Kosten, alles transparent vor der Buchung.",
+  },
+];
+
 const faqs = [
   {
     q: "Was kostet die Nutzung von Caprio?",
@@ -91,8 +111,8 @@ const faqs = [
 export default function SoFunktioniertsPage() {
   return (
     <div className="pb-8">
-      {/* hero */}
-      <section className="relative overflow-hidden border-b border-line">
+      {/* ----------------------------------------------------------------- hero */}
+      <section className="relative overflow-hidden">
         <Image
           src="/dachbox-hero.jpg"
           alt="Unterwegs mit der Dachbox"
@@ -102,83 +122,109 @@ export default function SoFunktioniertsPage() {
           className="object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-[#0a2114]/80 via-[#0a2114]/65 to-[#0a2114]/85" />
-        <div className="relative mx-auto max-w-3xl px-5 py-24 text-center text-cream sm:px-8 sm:py-28">
-          <p className="text-sm font-medium uppercase tracking-wider text-blush-300">
+        <div className="relative mx-auto max-w-3xl px-5 py-24 text-center text-white sm:px-8 sm:py-32">
+          <p className="animate-rise text-sm font-semibold uppercase tracking-wider text-blush-300">
             So funktioniert's
           </p>
-          <h1 className="mt-3 font-display text-4xl font-semibold leading-tight tracking-tight sm:text-6xl">
+          <h1
+            className="animate-rise mt-3 font-display text-4xl font-bold leading-tight tracking-tight sm:text-6xl"
+            style={{ animationDelay: "100ms" }}
+          >
             Stauraum teilen, statt Boxen kaufen
           </h1>
-          <p className="mt-5 text-lg leading-relaxed text-cream/85">
+          <p
+            className="animate-rise mt-5 text-lg leading-relaxed text-white/85"
+            style={{ animationDelay: "180ms" }}
+          >
             Caprio bringt Menschen zusammen, die eine Dachbox brauchen, mit
             Menschen, deren Box gerade ungenutzt herumsteht. Gut für den Geldbeutel,
             gut für die Umwelt.
           </p>
+          <div
+            className="animate-rise mt-8 flex flex-wrap items-center justify-center gap-3"
+            style={{ animationDelay: "260ms" }}
+          >
+            <Link
+              href="/dachboxen"
+              className="group inline-flex items-center gap-2 rounded-full bg-white px-6 py-3.5 text-sm font-bold text-ink transition-transform hover:-translate-y-px"
+            >
+              Box mieten
+              <ArrowRight size={16} className="transition-transform duration-200 group-hover:translate-x-0.5" />
+            </Link>
+            <Link
+              href="/vermieten"
+              className="inline-flex items-center gap-2 rounded-full border border-white/40 px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-white/10"
+            >
+              Box vermieten
+            </Link>
+          </div>
         </div>
       </section>
 
-      {/* for renters */}
-      <section className="mx-auto max-w-7xl px-5 py-20 sm:px-8">
+      {/* ----------------------------------------------------------- for renters */}
+      <section className="mx-auto max-w-7xl px-5 py-16 sm:px-8 lg:py-24">
         <div className="flex flex-wrap items-center gap-3">
-          <span className="rounded-full bg-ink px-3 py-1 text-xs font-semibold text-cream">
+          <span className="rounded-full bg-ink px-3 py-1 text-xs font-semibold text-white">
             Für Mieter:innen
           </span>
-          <h2 className="font-display text-3xl font-semibold tracking-tight sm:text-4xl">
+          <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
             Eine Box mieten
           </h2>
         </div>
 
-        <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="relative mt-12 grid gap-x-6 gap-y-10 md:grid-cols-2 lg:grid-cols-4">
+          {/* connecting line on large screens */}
+          <div className="pointer-events-none absolute left-0 right-0 top-6 hidden border-t border-dashed border-taupe-200 lg:block" />
           {renterSteps.map((step, i) => (
             <Reveal key={step.title} delay={i * 80} className="relative">
-              <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-line bg-cream">
-                <step.icon size={20} className="text-clay-600" />
+              <div className="relative flex h-12 w-12 items-center justify-center rounded-full bg-ink text-white">
+                <step.icon size={20} />
+                <span className="absolute -right-1.5 -top-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-blush-300 text-xs font-bold text-ink">
+                  {i + 1}
+                </span>
               </div>
-              <p className="mt-4 font-display text-sm font-semibold text-taupe-500">
-                Schritt {i + 1}
-              </p>
-              <h3 className="mt-1 text-lg font-semibold">{step.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-ink-soft">{step.text}</p>
+              <h3 className="mt-5 font-display text-lg font-bold">{step.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-taupe-500">{step.text}</p>
             </Reveal>
           ))}
         </div>
 
         <Link
           href="/dachboxen"
-          className="group mt-12 inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3.5 text-sm font-semibold text-cream transition-transform hover:-translate-y-px"
+          className="group mt-12 inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3.5 text-sm font-semibold text-white transition-transform hover:-translate-y-px"
         >
           Boxen ansehen
           <ArrowRight size={16} className="transition-transform duration-200 group-hover:translate-x-0.5" />
         </Link>
       </section>
 
-      {/* for hosts */}
-      <section className="bg-white">
-        <div className="mx-auto max-w-7xl px-5 py-20 sm:px-8">
+      {/* ------------------------------------------------------------- for hosts */}
+      <section className="bg-[#f7f7f7]">
+        <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 lg:py-24">
           <div className="flex flex-wrap items-center gap-3">
             <span className="rounded-full bg-blush-200 px-3 py-1 text-xs font-semibold text-clay-600">
               Für Vermieter:innen
             </span>
-            <h2 className="font-display text-3xl font-semibold tracking-tight sm:text-4xl">
+            <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
               Deine Box vermieten
             </h2>
           </div>
 
-          <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
             {hostSteps.map((step, i) => (
               <Reveal
                 key={step.title}
                 delay={i * 80}
-                className="rounded-lg border border-line bg-cream p-6"
+                className="group rounded-lg border border-line bg-white p-6 transition-shadow hover:shadow-md"
               >
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blush-100">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blush-100">
                   <step.icon size={20} className="text-clay-600" />
                 </div>
                 <p className="mt-4 font-display text-sm font-semibold text-taupe-500">
                   Schritt {i + 1}
                 </p>
-                <h3 className="mt-1 text-lg font-semibold">{step.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-ink-soft">
+                <h3 className="mt-1 font-display text-lg font-bold">{step.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-taupe-500">
                   {step.text}
                 </p>
               </Reveal>
@@ -187,7 +233,7 @@ export default function SoFunktioniertsPage() {
 
           <Link
             href="/vermieten"
-            className="group mt-12 inline-flex items-center gap-2 rounded-full border border-ink px-6 py-3.5 text-sm font-semibold text-ink transition-colors hover:bg-ink hover:text-cream"
+            className="group mt-12 inline-flex items-center gap-2 rounded-full border border-ink px-6 py-3.5 text-sm font-semibold text-ink transition-colors hover:bg-ink hover:text-white"
           >
             Mehr zum Vermieten
             <ArrowRight size={16} className="transition-transform duration-200 group-hover:translate-x-0.5" />
@@ -195,58 +241,83 @@ export default function SoFunktioniertsPage() {
         </div>
       </section>
 
-      {/* trust */}
-      <section className="mx-auto max-w-7xl px-5 py-20 sm:px-8">
-        <div className="grid gap-4 md:grid-cols-3">
-          {[
-            {
-              icon: ShieldCheck,
-              title: "Vertrauen zuerst",
-              text: "Verifizierte Profile und beidseitige Bewertungen sorgen dafür, dass beide Seiten wissen, mit wem sie es zu tun haben.",
-            },
-            {
-              icon: HeartHandshake,
-              title: "Persönliche Übergabe",
-              text: "Kein anonymer Versand – ihr trefft euch, die Box wird erklärt, Fragen werden direkt geklärt.",
-            },
-            {
-              icon: Receipt,
-              title: "Faire, klare Preise",
-              text: "Vermieter:innen setzen ihren Tagespreis selbst. Keine versteckten Kosten, alles transparent vor der Buchung.",
-            },
-          ].map(({ icon: Icon, title, text }, i) => (
-            <Reveal
-              key={title}
-              delay={i * 90}
-              className="rounded-lg border border-line bg-paper/40 p-7"
+      {/* ------------------------------------------------- why Caprio (split) */}
+      <section className="mx-auto max-w-7xl px-5 py-16 sm:px-8 lg:py-24">
+        <div className="grid items-stretch gap-5 lg:grid-cols-[1.3fr_1fr]">
+          {/* light trust panel */}
+          <Reveal className="rounded-lg bg-[#f7f7f7] p-8 sm:p-12">
+            <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
+              Warum Caprio sich
+              <br className="hidden sm:block" /> gut anfühlt
+            </h2>
+            <div className="mt-8 space-y-7">
+              {trustPoints.map(({ icon: Icon, title, text }) => (
+                <div key={title} className="flex gap-4">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white shadow-sm">
+                    <Icon size={18} className="text-clay-600" />
+                  </span>
+                  <div>
+                    <h3 className="font-display text-lg font-bold text-ink">{title}</h3>
+                    <p className="mt-1 text-sm leading-relaxed text-taupe-500">{text}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+
+          {/* green stat panel */}
+          <Reveal delay={120} className="flex flex-col justify-between gap-8 rounded-lg bg-clay-600 p-8 text-white sm:p-12">
+            <p className="font-display text-2xl font-bold leading-snug sm:text-3xl">
+              Geteilt fährt sich's besser.
+            </p>
+            <div className="space-y-6">
+              <div className="flex items-start gap-3">
+                <Star size={26} className="shrink-0 fill-white text-white" />
+                <div>
+                  <p className="font-display text-xl font-bold">4,9 / 5</p>
+                  <p className="text-sm text-white/75">
+                    Durchschnittliche Bewertung der Übergaben
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <Leaf size={26} className="shrink-0 text-white" />
+                <div>
+                  <p className="font-display text-xl font-bold">Weniger Neukauf</p>
+                  <p className="text-sm text-white/75">
+                    Jede geteilte Box spart Material, Geld und Stellplatz
+                  </p>
+                </div>
+              </div>
+            </div>
+            <Link
+              href="/dachboxen"
+              className="group inline-flex w-fit items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-bold text-ink transition-opacity hover:opacity-90"
             >
-              <Icon size={22} className="text-clay-600" />
-              <h3 className="mt-4 text-lg font-semibold">{title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-ink-soft">{text}</p>
-            </Reveal>
-          ))}
+              Loslegen
+              <ArrowRight size={16} className="transition-transform duration-200 group-hover:translate-x-0.5" />
+            </Link>
+          </Reveal>
         </div>
       </section>
 
-      {/* faq */}
+      {/* -------------------------------------------------------------------- faq */}
       <section className="mx-auto max-w-3xl px-5 py-12 sm:px-8">
-        <h2 className="text-center font-display text-3xl font-semibold tracking-tight sm:text-4xl">
+        <h2 className="text-center font-display text-3xl font-bold tracking-tight sm:text-4xl">
           Häufige Fragen
         </h2>
         <div className="mt-10 space-y-3">
           {faqs.map((faq, i) => (
             <Reveal key={faq.q} delay={i * 70}>
-            <details
-              className="group rounded-lg border border-line bg-cream px-6 py-5 transition-colors hover:border-taupe-300 [&_summary::-webkit-details-marker]:hidden"
-            >
-              <summary className="flex cursor-pointer items-center justify-between gap-4 font-semibold">
-                {faq.q}
-                <span className="text-2xl font-normal text-taupe-500 transition-transform group-open:rotate-45">
-                  +
-                </span>
-              </summary>
-              <p className="mt-3 text-sm leading-relaxed text-ink-soft">{faq.a}</p>
-            </details>
+              <details className="group rounded-lg border border-line bg-white px-6 py-5 transition-colors hover:border-taupe-300 [&_summary::-webkit-details-marker]:hidden">
+                <summary className="flex cursor-pointer items-center justify-between gap-4 font-display font-bold">
+                  {faq.q}
+                  <span className="text-2xl font-normal text-taupe-500 transition-transform group-open:rotate-45">
+                    +
+                  </span>
+                </summary>
+                <p className="mt-3 text-sm leading-relaxed text-taupe-500">{faq.a}</p>
+              </details>
             </Reveal>
           ))}
         </div>
